@@ -29,9 +29,9 @@ class TkManager(object):
         self.lastContent().grid(row=len(self.content))
         return self.lastContent()
 
-    def addButton(self, text, mustReturn=False, callback=None, buttonID=None):
+    def addButton(self, text, mustReturn=False, callback=None, args=None):
         action = [callback, self.destroy if mustReturn else self.quit]
-        args = [buttonID, None]
+        args = [args, None]
         onClick = self.makeLambda(action, args)
         self.content.append(Button(self.tk, text=text, command=onClick))
         self.lastContent().grid(row=len(self.content), sticky=W, pady=4)

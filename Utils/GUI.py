@@ -18,32 +18,34 @@ class GUI(object):
         if isPopup:
             tkm.run()
 
-    def getPassword(self, msg='Enter your password', tkManager=None, isPopup=True):
+    def getPassword(self, msg='Enter your password', tkManager=None, isPopup=False):
         tkm = self.getTkManager(tkManager)
+        tkm.removeAll()
         tkm.addLabel(msg)
         entry = tkm.addEntry(isPassword=True)
-        tkm.addButton("Continue", mustReturn=isPopup)
+        tkm.addButton("Continue", mustReturn=isPopup, callback=tkm.setAsyncResponse, args=entry.get)
         tkm.run()
-        return entry.get()
+        return tkm.getAsyncResponse()
 
-    def getInfo(self, msg, tkManager=None, isPopup=True):
+    def getInfo(self, msg, tkManager=None, isPopup=False):
         tkm = self.getTkManager(tkManager)
+        tkm.removeAll()
         tkm.addLabel(msg)
         entry = tkm.addEntry()
-        tkm.addButton("OK", mustReturn=isPopup)
+        tkm.addButton("Continue", mustReturn=isPopup, callback=tkm.setAsyncResponse, args=entry.get)
         tkm.run()
-        return entry.get()
+        return tkm.getAsyncResponse()
 
-    def getChoices(self, msg, choices, tkManager=None, isPopup=True):
+    def getChoices(self, msg, choices, tkManager=None, isPopup=False):
         """ Choices: array
             Return the chosen's index"""
         tkm = self.getTkManager(tkManager)
+        tkm.removeAll()
         tkm.addLabel(msg)
         for i in range(len(choices)):
-            tkm.addButton(choices[i], mustReturn=isPopup, callback=tkm.setAsyncResponse, buttonID=i)
+            tkm.addButton(choices[i], mustReturn=isPopup, callback=tkm.setAsyncResponse, args=i)
         tkm.run()
-        response = tkm.getAsyncResponse()
-        return response
+        return tkm.getAsyncResponse()
 
     def getTkManager(self, tkManager):
         if tkManager:

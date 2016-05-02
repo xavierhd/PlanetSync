@@ -27,6 +27,7 @@ class Commander(object):
             "operation": "What do you want to do ?",
             "choice":[
                 "Temporarly mount a folder",
+                "Add an sshKey to the remote computer"
                 "Mount a folder forever",
                 "Unmount a folder",
                 "Remove a folder mounted forever",
@@ -37,10 +38,10 @@ class Commander(object):
             "get": {
                 "remote_user": "What is the remote user name?",
                 "remote_ip": "What is the remote ip?",
-                "remote_dir": "What is the remote directory path?",
+                "remote_path": "What is the remote directory path?",
                 "remote_pw": "What is the remote user password?",
 
-                "mount_dir": "What is the local mounting directory path? (it must be empty)",
+                "local_path": "What is the local mounting directory path? (it must be empty)",
             }
         }
     }
@@ -59,23 +60,33 @@ class Commander(object):
         while running:
             choice = self.gUI.getChoices(self.menu["primary"]["operation"],
                                          self.menu["primary"]["choice"],
-                                         tkManager=self.gUI.mainWindow,
-                                         isPopup=False)
+                                         tkManager=self.gUI.mainWindow)
+            if choice == 0:
+                args = {
+                    "remoteIP": self.gUI.getInfo(self.menu["question"]["get"]["remote_ip"],
+                                            tkManager=self.gUI.mainWindow),
+                    "remotePath": self.gUI.getInfo(self.menu["question"]["get"]["remote_path"],
+                                             tkManager=self.gUI.mainWindow),
+                    "localPath": self.gUI.getInfo(self.menu["question"]["get"]["local_path"],
+                                             tkManager=self.gUI.mainWindow),
+                    "remoteUser": self.gUI.getInfo(self.menu["question"]["get"]["remote_user"],
+                                              tkManager=self.gUI.mainWindow),
+                }
+                remotePW = self.gUI.getPassword(self.menu["question"]["get"]["remote_pw"],
+                                                tkManager=self.gUI.mainWindow)
+                self.command(self.cmd["mount"], args)
 
-            self.gUI.info(choice)
-            if runfor == 0:
-                running = False
-            else:
-                runfor = runfor - 1
 
     def callBack(self, args):
         pass
 
-
     def command(self, command, args):
-        process = subprocess.Popen(command.format(**args).split(' '), stdout=subprocess.PIPE)
+        process = subprocess.Popen(command.format(**args).split(), stdout=subprocess.PIPE)
         #This is the return value of the command
         return ''.join([p for p in process.communicate() if p])
+
+    def icommand(self, command, args):
+        pass
 
     def internetExist(self):
         r = requests.get('https://google.ca')
