@@ -40,7 +40,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/xavier/Projet/PlanetSync"
+VIRTUAL_ENV="/home/xavier/Documents/Projet/PlanetSync/.virtualEnv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -1,4 +1,4 @@
-#!/home/xavier/Projet/PlanetSync/bin/python
+#!/home/xavier/Documents/Projet/PlanetSync/.virtualEnv/bin/python
 
 import sys
 import getopt

@@ -67,7 +67,11 @@ class TkManager(object):
 
     def setAsyncResponse(self, args=None):
         self.lock.acquire()
-        self.asyncResponse = args
+        try:
+            self.asyncResponse = args()
+        except TypeError:
+            #args is definitely not a function
+            self.asyncResponse = args
         self.lock.release()
 
     def getAsyncResponse(self):

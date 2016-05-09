@@ -5,10 +5,9 @@
     Create an ssh file share with your home's dynamic IP server
 """
 import requests
-import subprocess
 from threading import Thread
 
-from Utils.GUI import GUI
+import UI
 
 
 class Commander(object):
@@ -47,12 +46,13 @@ class Commander(object):
     }
 
     def __init__(self):
-        self.gUI = GUI(self.menu["primary"]["title"], self.callBack)
+        self.gUI = GUI("english", self.callBack)
         self.gUI.info(self.menu["primary"]["info"],
                       tkManager=self.gUI.mainWindow,
                       isPopup=False)
         #thread = Thread
         self.run()
+        print ("This is the end")
 
     def run(self):
         running = True
@@ -62,35 +62,41 @@ class Commander(object):
                                          self.menu["primary"]["choice"],
                                          tkManager=self.gUI.mainWindow)
             if choice == 0:
-                args = {
-                    "remoteIP": self.gUI.getInfo(self.menu["question"]["get"]["remote_ip"],
-                                            tkManager=self.gUI.mainWindow),
-                    "remotePath": self.gUI.getInfo(self.menu["question"]["get"]["remote_path"],
-                                             tkManager=self.gUI.mainWindow),
-                    "localPath": self.gUI.getInfo(self.menu["question"]["get"]["local_path"],
-                                             tkManager=self.gUI.mainWindow),
-                    "remoteUser": self.gUI.getInfo(self.menu["question"]["get"]["remote_user"],
-                                              tkManager=self.gUI.mainWindow),
-                }
+                gUI.getSshInfo()
+                for arg in args:
+                    print (args[arg])
+
                 remotePW = self.gUI.getPassword(self.menu["question"]["get"]["remote_pw"],
                                                 tkManager=self.gUI.mainWindow)
-                self.command(self.cmd["mount"], args)
+
+                client = SSHClient()
+                client.connect(hostname=remoteUser,
+                               username=remoteUser,
+                               password=remotePW,
+                               compress=True)
+
+                #print (self.command(self.cmd["mount"], args))
 
 
     def callBack(self, args):
         pass
 
     def command(self, command, args):
-        process = subprocess.Popen(command.format(**args).split(), stdout=subprocess.PIPE)
+        Thread()
+        process = subprocess.Popen(command.format(**args).split(), stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         #This is the return value of the command
+        if "belzebuth@192.168.0.2's password: " in process.communicate():
+            print ("bravo")
+        else:
+            print ("pas bravo")
         return ''.join([p for p in process.communicate() if p])
 
     def icommand(self, command, args):
         pass
 
     def internetExist(self):
-        r = requests.get('https://google.ca')
-        return str(r.status_code) == '200'
+        r = requests.head("http://google.ca")
+        return str(r.status_code) == '301'
 
 
 

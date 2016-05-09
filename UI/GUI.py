@@ -1,15 +1,38 @@
 from Utils.TkManager import TkManager
+from UI import LangSelector
 
 class GUI(object):
-    def __init__(self, title, callBack):
-        self.mainWindow = self.showMenu(title)
+    def __init__(self, language, callBack):
         self.callBack = callBack
+        self.string = LangSelector.getLang(language)
+        self.mainWindow = self.showMenu()
 
-    def showMenu(self, title):
+    def showMenu(self):
         tkm = TkManager()
         tkm.addLabel(title)
         return tkm
 
+    def getSshInfo(self, question):
+        return  {
+            "hostname": self.gUI.getInfo(question["remote_ip"],
+                                            tkManager=self.gUI.mainWindow),
+            "username": self.gUI.getInfo(question["remote_user"],
+                                        tkManager=self.gUI.mainWindow),
+            "password":self.gUI.getPassword(question["remote_pw"],
+                                                tkManager=self.gUI.mainWindow)
+                }
+
+    def getSshfsInfo(self, question):
+        info = self.getSshInfo(question)
+        info["remotePath"] = self.gUI.getInfo(self.menu["question"]["get"]["remote_path"],
+                                            tkManager=self.gUI.mainWindow)
+        info["localPath"] = self.gUI.getInfo(self.menu["question"]["get"]["local_path"],
+                                            tkManager=self.gUI.mainWindow)
+        return info
+
+    ##################
+    # General method #
+    ##################
     def info(self, msg, tkManager=None, isPopup=True):
         tkm = self.getTkManager(tkManager)
         tkm.addLabel(msg)
