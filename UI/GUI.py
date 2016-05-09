@@ -1,15 +1,19 @@
-from Utils.TkManager import TkManager
+from UI.TkManager import TkManager
 from UI import LangSelector
 
 class GUI(object):
-    def __init__(self, language, callBack):
+    def __init__(self, callBack, language="english"):
         self.callBack = callBack
         self.string = LangSelector.getLang(language)
         self.mainWindow = self.showMenu()
 
     def showMenu(self):
         tkm = TkManager()
-        tkm.addLabel(title)
+        print (self.string)
+        s = self.string["menu"]["title"]
+        tkm.addLabel(s)
+        tkm.addLabel(self.string["menu"]["info"])
+        tkm.addLabel(self.string["menu"]["operation"])
         return tkm
 
     def getSshInfo(self, question):

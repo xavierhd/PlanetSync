@@ -7,7 +7,7 @@
 import requests
 from threading import Thread
 
-import UI
+from UI.GUI import GUI
 
 
 class Commander(object):
@@ -46,7 +46,7 @@ class Commander(object):
     }
 
     def __init__(self):
-        self.gUI = GUI("english", self.callBack)
+        self.gUI = GUI(self.callBack, language="english")
         self.gUI.info(self.menu["primary"]["info"],
                       tkManager=self.gUI.mainWindow,
                       isPopup=False)
