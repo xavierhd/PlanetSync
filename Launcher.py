@@ -19,38 +19,9 @@ class Commander(object):
         "add self to cron": "(crontab -l ; echo '00 09 * * 1-5 runUpdateScript') | crontab -",
         "remoteCommand": "ssh -t {remoteIP} '{command}'"
     }
-    menu = {
-        "primary": {
-            "title": "PlanetSync",
-            "info": "The SSH Directory Mounter\nCreate an ssh file share with your home's dynamic IP server",
-            "operation": "What do you want to do ?",
-            "choice":[
-                "Temporarly mount a folder",
-                "Add an sshKey to the remote computer"
-                "Mount a folder forever",
-                "Unmount a folder",
-                "Remove a folder mounted forever",
-            ],
-        },
-        "question":{
-            "confirm": "Are you sure that this is what you want to do?",
-            "get": {
-                "remote_user": "What is the remote user name?",
-                "remote_ip": "What is the remote ip?",
-                "remote_path": "What is the remote directory path?",
-                "remote_pw": "What is the remote user password?",
-
-                "local_path": "What is the local mounting directory path? (it must be empty)",
-            }
-        }
-    }
 
     def __init__(self):
         self.gUI = GUI(self.callBack, language="english")
-        self.gUI.info(self.menu["primary"]["info"],
-                      tkManager=self.gUI.mainWindow,
-                      isPopup=False)
-        #thread = Thread
         self.run()
         print ("This is the end")
 
@@ -58,13 +29,12 @@ class Commander(object):
         running = True
         runfor = 0
         while running:
-            choice = self.gUI.getChoices(self.menu["primary"]["operation"],
-                                         self.menu["primary"]["choice"],
+            self.gUI.showMenu()
+            choice = self.gUI.getChoices(self.gUI.string["menu"]["operation"],
+                                         self.gUI.string["menu"]["choice"],
                                          tkManager=self.gUI.mainWindow)
             if choice == 0:
-                gUI.getSshInfo()
-                for arg in args:
-                    print (args[arg])
+                info = gUI.getSshfsInfo()
 
                 remotePW = self.gUI.getPassword(self.menu["question"]["get"]["remote_pw"],
                                                 tkManager=self.gUI.mainWindow)

@@ -8,4 +8,4 @@ class SshAgent(object):
 	client = None
 
 	def makeClient(self):
-		self.client = 
+		self.client = SSHClient()

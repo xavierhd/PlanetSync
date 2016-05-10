@@ -8,10 +8,11 @@ class GUI(object):
         self.mainWindow = self.showMenu()
 
     def showMenu(self):
-        tkm = TkManager()
-        print (self.string)
-        s = self.string["menu"]["title"]
-        tkm.addLabel(s)
+        if self.mainWindow:
+            tkm = self.mainWindow
+        else:
+            tkm = TkManager()
+        tkm.addLabel(self.string["menu"]["title"])
         tkm.addLabel(self.string["menu"]["info"])
         tkm.addLabel(self.string["menu"]["operation"])
         return tkm
