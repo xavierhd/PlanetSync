@@ -2,6 +2,9 @@ from UI.TkManager import TkManager
 from UI import LangSelector
 
 class GUI(object):
+    mainWindow = None
+    string = None
+
     def __init__(self, callBack, language="english"):
         self.callBack = callBack
         self.string = LangSelector.getLang(language)
@@ -17,22 +20,22 @@ class GUI(object):
         tkm.addLabel(self.string["menu"]["operation"])
         return tkm
 
-    def getSshInfo(self, question):
+    def getSshInfo(self):
         return  {
-            "hostname": self.gUI.getInfo(question["remote_ip"],
-                                            tkManager=self.gUI.mainWindow),
-            "username": self.gUI.getInfo(question["remote_user"],
-                                        tkManager=self.gUI.mainWindow),
-            "password":self.gUI.getPassword(question["remote_pw"],
-                                                tkManager=self.gUI.mainWindow)
+            "hostname": self.getInfo(self.string["question"]["get"]["remote_ip"],
+                                         tkManager=self.mainWindow),
+            "username": self.getInfo(self.string["question"]["get"]["remote_user"],
+                                         tkManager=self.mainWindow),
+            "password":self.getPassword(self.string["question"]["get"]["remote_pw"],
+                                            tkManager=self.mainWindow)
                 }
 
-    def getSshfsInfo(self, question):
-        info = self.getSshInfo(question)
-        info["remotePath"] = self.gUI.getInfo(self.menu["question"]["get"]["remote_path"],
-                                            tkManager=self.gUI.mainWindow)
-        info["localPath"] = self.gUI.getInfo(self.menu["question"]["get"]["local_path"],
-                                            tkManager=self.gUI.mainWindow)
+    def getSshfsInfo(self):
+        info = self.getSshInfo()
+        info["remotePath"] = self.getInfo(self.string["question"]["get"]["remote_path"],
+                                            tkManager=self.mainWindow)
+        info["localPath"] = self.getInfo(self.string["question"]["get"]["local_path"],
+                                            tkManager=self.mainWindow)
         return info
 
     ##################

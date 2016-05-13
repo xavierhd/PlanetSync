@@ -3,16 +3,16 @@ menu:
     info: The SSH Directory Mounter\nCreate an ssh file share with your home's dynamic IP server
     operation: What do you want to do ?
     choice:
-        Temporarly mount a folder
-        Add an sshKey to the remote computer
-        Mount a folder forever
-        Unmount a folder
-        Remove a folder mounted forever
+        0: Temporarly mount a folder
+        1: Add an sshKey to the remote computer
+        2: Mount a folder forever
+        3: Unmount a folder
+        4: Remove a folder mounted forever
 question:
     confirm: Are you sure that this is what you want to do?
     get:
-        remote_user": What is the remote user name?
-        remote_ip": What is the remote ip?
-        remote_path": What is the remote directory path?
-        remote_pw": What is the remote user password?
+        remote_user: What is the remote user name?
+        remote_ip: What is the remote ip?
+        remote_path: What is the remote directory path?
+        remote_pw: What is the remote user password?
         local_path: What is the local mounting directory path? (it must be empty)
