@@ -6,8 +6,10 @@
 """
 import requests
 from threading import Thread
+from pprint import pprint
 
 from UI.GUI import GUI
+import Operation
 from Utils.SshAgent import SshAgent
 
 
@@ -29,34 +31,10 @@ class Commander(object):
 
     def run(self):
         running = True
-        runfor = 0
         while running:
-            self.gUI.showMenu()
-            from pprint import pprint
-            pprint (self.gUI.string)
-            choice = self.gUI.getChoices(self.gUI.string["menu"]["operation"],
-                                         self.gUI.string["menu"]["choice"],
-                                         tkManager=self.gUI.mainWindow)
-            if choice == 0:
-                info = self.gUI.getSshfsInfo()
-                self.sshAgent.sshfs(info)
-            elif choice == 1:
-                info = self.gUI.getSshInfo()
-                self.sshAgent.addKey(info)
+            Operation.Menu(self.gUI)
 
     def callBack(self, args):
-        pass
-
-    def command(self, command, args):
-        process = subprocess.Popen(command.format(**args).split(), stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        #This is the return value of the command
-        if "belzebuth@192.168.0.2's password: " in process.communicate():
-            print ("bravo")
-        else:
-            print ("pas bravo")
-        return ''.join([p for p in process.communicate() if p])
-
-    def icommand(self, command, args):
         pass
 
     def internetExist(self):
