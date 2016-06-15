@@ -10,11 +10,6 @@ from Utils import FileReader
 class SshAgent(object):
     client = None
     defautTimeout = 5
-    sshExpected = [
-            "The authenticity of host.*",
-            "{username}@{hostname}'s password: ".format(**info),
-            pexpect.EOF
-            ]
 
     def __init__(self):
         pass
@@ -48,6 +43,11 @@ class SshAgent(object):
             print (e)
 
     def defautExpect(self, info, otherExpect=None):
+        sshExpected = [
+            "The authenticity of host.*",
+            "{username}@{hostname}'s password: ".format(**info),
+            pexpect.EOF
+        ]
         result = -1
         try:
             #Useful to log info inside the terminal.
