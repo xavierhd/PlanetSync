@@ -67,14 +67,17 @@ class GUI(object):
         tkm.run()
         return tkm.getAsyncResponse()
 
-    def getChoices(self, msg, choices, tkManager=None, isPopup=False):
+    def getChoices(self, msg, choices, tkManager=None, isPopup=False, callback=None):
         """ Choices: array
             Return the chosen's index"""
         tkm = self.getTkManager(tkManager)
         tkm.removeAll()
         tkm.addLabel(msg)
+        if callback is None:
+            callback = tkm.setAsyncResponse
+
         for i in range(len(choices)):
-            tkm.addButton(choices[i], mustReturn=isPopup, callback=tkm.setAsyncResponse, args=i)
+            tkm.addButton(choices[i], mustReturn=isPopup, callback=callback, args=i)
         tkm.run()
         return tkm.getAsyncResponse()
 
