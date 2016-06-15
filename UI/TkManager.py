@@ -77,5 +77,6 @@ class TkManager(object):
     def getAsyncResponse(self):
         self.lock.acquire()
         val = self.asyncResponse
+        self.asyncResponse = None
         self.lock.release()
         return val
