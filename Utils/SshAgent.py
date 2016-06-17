@@ -27,7 +27,8 @@ class SshAgent(object):
         if not FileReader.read(keyPath):
             self.createKey(keyPath)
         try:
-            child = pexpect.spawn("ssh-copy-id {username}@{hostname}".format(**info))
+            command = "ssh-copy-id {username}@{hostname}".format(**info)
+            child = pexpect.spawn(command)
             self.defautExpect(info)
         except Exception as e:
             import traceback; traceback.print_exc()
@@ -36,7 +37,8 @@ class SshAgent(object):
     def sshfs(self, info):
         print (info)
         try:
-            child = pexpect.spawn("sshfs {username}@{hostname}:{remotePath} {localPath}".format(**info))
+            command = "sshfs {username}@{hostname}:{remotePath} {localPath}".format(**info)
+            child = pexpect.spawn(command)
             self.defautExpect(info)
         except Exception as e:
             import traceback; traceback.print_exc()

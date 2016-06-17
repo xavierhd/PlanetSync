@@ -10,9 +10,9 @@ class MainMenu(object):
         self.gUI.showMenu()
         #pprint (self.gUI.string)
         self.gUI.getChoices(self.gUI.string["menu"]["operation"],
-                                      self.gUI.string["menu"]["choice"],
-                                      tkManager=self.gUI.mainWindow,
-                                      callback=self.callback)
+                            self.gUI.string["menu"]["choice"],
+                            tkManager=self.gUI.mainWindow,
+                            callback=self.callback)
 
     def callback(self, choice):
         if choice == 0:
