@@ -1,14 +1,14 @@
 
 from pprint import pprint
 
-class Menu(object):
+class MainMenu(object):
 
     gUI = None
 
-    def __init__(self, gUI):
+    def __init__(self, gUI, callback):
         self.gUI = gUI
         self.gUI.showMenu()
-        pprint (self.gUI.string)
+        #pprint (self.gUI.string)
         self.gUI.getChoices(self.gUI.string["menu"]["operation"],
                                       self.gUI.string["menu"]["choice"],
                                       tkManager=self.gUI.mainWindow,

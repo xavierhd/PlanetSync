@@ -14,6 +14,9 @@ from Utils.SshAgent import SshAgent
 
 
 class Commander(object):
+
+    running = None
+
     cmd = {
         "mount": "sshfs {remoteUser}@{remoteIP}:{remotePath} {localPath}",
         "unmount":"fusermount -u {localPath}",
@@ -30,12 +33,19 @@ class Commander(object):
         print ("This is the end")
 
     def run(self):
-        running = True
-        while running:
-            Operation.Menu(self.gUI)
+        """
+        Main loop of the program
+        """
+        self.running = True
+        while self.running:
+            Operation.MainMenu(self.gUI, self.callBack)
 
     def callBack(self, args):
-        pass
+        """
+        Function call if some operation need to return control to the basic Launcher
+        """
+        if args == "quit":
+            self.running = False
 
 if __name__ == '__main__':
     Commander()
