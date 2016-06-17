@@ -1,3 +1,3 @@
-from UI import GUI
-from UI import TkManager
-from UI import LangSelector
+from UI.GUI import GUI
+from UI.TkManager import TkManager
+from UI.LangSelector import LangSelector
