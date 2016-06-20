@@ -19,4 +19,5 @@ The SSH Directory Mounter
 
 	virtualenv -p python3 /home/user/choose/a/path/for/your/virtualenv
 
+	pip install -r python.req
 	```
