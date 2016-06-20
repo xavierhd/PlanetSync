@@ -12,10 +12,11 @@ class Handler(object):
         try:
             self.headTemplate = read("UI/Template/head.Template")
             self.tailTemplate = read("UI/Template/tail.Template")
-            fstab = read("/etc/fstab")
+            #fstab = read("/etc/fstab")
+            fstab = read("~/test_fstab")
             key = None
             for line in fstab:
-                if self.isAutoGen(line):
+                if self.isAutoGenSection(line):
                     data = parse(line)
                     if isKey(data):
                         key = data
@@ -36,17 +37,33 @@ class Handler(object):
     def dump(self):
         pass
 
-    def isAutoGen(self, line):
+    def isAutoGenSection(self, line):
+        """
+        Check if the line is inside the autogen section
+        """
         result = False
+
         if not self.inAutoGen:
-            if line == self.headTemplate:
-                self.inAutoGen = True
+            if self.isHead(line):
                 result = True
         else:
+            if not self.isTail(line):
+                result = True
+
+        return result
+
+    def isHead(self, line):
+        result = False
+        if line == self.headTemplate:
+            self.inAutoGen = True
             result = True
-            if line == self.tailTemplate:
-                self.inAutoGen = True
-                result = False
+        return result
+
+    def isTail(self, line):
+        result = False
+        if line == self.tailTemplate:
+            self.inAutoGen = False
+            result = True
         return result
 
     def isKey(self):
