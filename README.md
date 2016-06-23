@@ -12,12 +12,28 @@ The SSH Directory Mounter
 
 
 ##Setup the project
-*Debian
+###Debian
+*Install pip's build dependency
+    ```bash
+        sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+    ```
+*Update pip
 	```bash
-	sudo pip install pip -U
-	sudo pip install virtualenv
-
-	virtualenv -p python3 /home/user/choose/a/path/for/your/virtualenv
-
+	    sudo pip install pip -U
+	```
+*Install a system wide pip package
+    ```bash
+	    sudo pip install virtualenv
+	```
+*Create a virtual environment
+	```bash
+	    virtualenv -p python3 /home/user/choose/a/path/for/your/virtualenv
+    ```
+*Activate the virtualEnv
+    ```bash
+        source /home/user/choose/a/path/for/your/virtualenv/bin/activate
+    ```
+*Install project dependency
+    ```bash
 	pip install -r python.req
 	```
