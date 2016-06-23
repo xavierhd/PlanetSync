@@ -3,7 +3,7 @@ from FilerReader import read
 class Handler(object):
     currentData = {}
     inAutoGen = False
-    headTemplate, tailTemplate = None
+    headTemplate, entryTemplate, tailTemplate= None
 
     def __init__(self):
         pass
@@ -11,6 +11,7 @@ class Handler(object):
     def init(self):
         try:
             self.headTemplate = read("UI/Template/head.Template")
+            self.entryTemplate = read("UI/Template/entry.Template")
             self.tailTemplate = read("UI/Template/tail.Template")
             #fstab = read("/etc/fstab")
             fstab = read("~/test_fstab")
@@ -27,8 +28,9 @@ class Handler(object):
             raise e
 
     def parse(self, line):
+        regex = "##->.*<-"
         if line:
-            regex.match("\#\#", line)
+            re.split(regex, line)
             return
 
     def add(self):
@@ -53,6 +55,9 @@ class Handler(object):
         return result
 
     def isHead(self, line):
+        """
+        Check if the line is the head of the autogen section
+        """
         result = False
         if line == self.headTemplate:
             self.inAutoGen = True
@@ -60,6 +65,9 @@ class Handler(object):
         return result
 
     def isTail(self, line):
+        """
+        Check if the line is the tail of the autogen section
+        """
         result = False
         if line == self.tailTemplate:
             self.inAutoGen = False
@@ -67,5 +75,4 @@ class Handler(object):
         return result
 
     def isKey(self):
-        pass
-
+        if()
