@@ -7,6 +7,7 @@ from scp import SCPClient
 
 from Utils import FileReader
 
+
 class SshAgent(object):
     client = None
     defautTimeout = 5

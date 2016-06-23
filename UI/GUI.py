@@ -1,6 +1,7 @@
 from UI.TkManager import TkManager
 from UI import LangSelector
 
+
 class GUI(object):
     mainWindow = None
     string = None

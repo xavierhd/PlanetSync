@@ -16,3 +16,4 @@ question:
         remote_path: What is the remote directory path?
         remote_pw: What is the remote user password?
         local_path: What is the local mounting directory path? (it must be empty)
+        share_name: What is the share name?

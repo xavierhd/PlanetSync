@@ -4,13 +4,10 @@
     The SSH Directory Mounter
     Create an ssh file share with your home's dynamic IP server
 """
-import requests
-from threading import Thread
 from pprint import pprint
 
 from UI.GUI import GUI
 import Operation
-from Utils.SshAgent import SshAgent
 
 
 class Commander(object):
@@ -27,7 +24,6 @@ class Commander(object):
     }
 
     def __init__(self):
-        self.sshAgent = SshAgent()
         self.gUI = GUI(self.callBack, language="english")
         self.run()
         print ("This is the end")
