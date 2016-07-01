@@ -1,7 +1,5 @@
-
-from pprint import pprint
 from Utils.SshAgent import SshAgent
-from Utils.fstabHandler import Handler
+from Utils.fstab.FstabHandler import Handler
 
 
 class MainMenu(object):
@@ -15,7 +13,7 @@ class MainMenu(object):
         self.fstabHandler = Handler()
         self.gUI = gUI
         self.gUI.showMenu()
-        #pprint (self.gUI.string)
+        # pprint (self.gUI.string)
         self.gUI.getChoices(self.gUI.string["menu"]["operation"],
                             self.gUI.string["menu"]["choice"],
                             tkManager=self.gUI.mainWindow,
@@ -30,7 +28,8 @@ class MainMenu(object):
             self.sshAgent.addKey(info)
         elif choice == 2:
             info = self.gUI.getSshfsInfo()
-            info.update(self.gUI.getInfo(self.gUI.string["question"]["share_name"]))
+            additionalInfo = self.gUI.getInfo(self.gUI.string["question"]["share_name"])
+            info.update(additionalInfo)
             self.fstabHandler.add(info)
         elif choice == 3:
             print ("Choice 3")

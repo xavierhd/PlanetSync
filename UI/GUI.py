@@ -3,6 +3,10 @@ from UI import LangSelector
 
 
 class GUI(object):
+    """
+    Tkinter GUI, high level tools
+    """
+
     mainWindow = None
     string = None
 
@@ -22,21 +26,21 @@ class GUI(object):
         return tkm
 
     def getSshInfo(self):
-        return  {
+        return {
             "hostname": self.getInfo(self.string["question"]["get"]["remote_ip"],
-                                         tkManager=self.mainWindow),
+                                     tkManager=self.mainWindow),
             "username": self.getInfo(self.string["question"]["get"]["remote_user"],
-                                         tkManager=self.mainWindow),
-            "password":self.getPassword(self.string["question"]["get"]["remote_pw"],
-                                            tkManager=self.mainWindow)
+                                     tkManager=self.mainWindow),
+            "password": self.getPassword(self.string["question"]["get"]["remote_pw"],
+                                        tkManager=self.mainWindow)
                 }
 
     def getSshfsInfo(self):
         info = self.getSshInfo()
         info["remotePath"] = self.getInfo(self.string["question"]["get"]["remote_path"],
-                                            tkManager=self.mainWindow)
+                                          tkManager=self.mainWindow)
         info["localPath"] = self.getInfo(self.string["question"]["get"]["local_path"],
-                                            tkManager=self.mainWindow)
+                                         tkManager=self.mainWindow)
         return info
 
     ##################
@@ -68,14 +72,16 @@ class GUI(object):
         tkm.run()
         return tkm.getAsyncResponse()
 
-    def getChoices(self, msg, choices, tkManager=None, isPopup=False, callback=None):
-        """ Choices: array
-            Return the chosen's index"""
+    def getChoices(self, title, choices, tkManager=None, isPopup=False, callback=None):
+        """
+        Choices: array of choices
+        :return the chosen index
+        """
         tkm = self.getTkManager(tkManager)
         tkm.removeAll()
-        tkm.addLabel(msg)
         if callback is None:
             callback = tkm.setAsyncResponse
+        tkm.addLabel(title)
 
         for i in range(len(choices)):
             tkm.addButton(choices[i], mustReturn=isPopup, callback=callback, args=i)
@@ -83,6 +89,11 @@ class GUI(object):
         return tkm.getAsyncResponse()
 
     def getTkManager(self, tkManager):
+        """
+        Get a tkManager instance. If the param is None, return a new TkManager
+        :param tkManager: should contain a tkManager instance.
+        :return: a tkManager
+        """
         if tkManager:
             tkm = tkManager
         else:

@@ -1,7 +1,16 @@
 from tkinter import *
 from threading import Lock
 
+
 class TkManager(object):
+    """
+    Low level tkinter manager
+    Create an instance of it,
+    Call run to show the window
+    You can pass your own callback to buttons,
+    but you can also get the clicked button value with getAsyncResponse
+    """
+
     def __init__(self):
         self.tk = Tk()
         self.content = []
@@ -22,7 +31,7 @@ class TkManager(object):
         return self.lastContent()
 
     def addEntry(self, isPassword=False):
-        if(isPassword):
+        if isPassword:
             self.content.append(Entry(self.tk, show="*"))
         else:
             self.content.append(Entry(self.tk))
@@ -44,17 +53,24 @@ class TkManager(object):
         return self.content[len(self.content) - 1]
 
     def makeLambda(self, actions, args=None):
-        """ Build a lambda expression
-            actions: function list
-            args: actions' args list"""
+        """
+        Build a lambda expression
+        :param actions: function list
+        :param args: actions' args list
+        """
         return lambda: self.superLambda(actions, args)
 
     def superLambda(self, actions, args):
-        """ Pack any function inside a lambda call
+        """
+        Pack any function inside a lambda call
+        :param actions: a list of function
+        :param args: a list of args to be passed to the function
         """
         for i in range(len(actions)):
             if actions[i] is not None:
-                if args is not None and i < len(args) and args[i] is not None:
+                if args is not None \
+                        and i < len(args) \
+                        and args[i] is not None:
                     actions[i](args[i])
                 else:
                     actions[i]()
