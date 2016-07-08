@@ -175,3 +175,6 @@ fabric.properties
 
 # *.iml
 # modules.xml
+
+### My own things
+/activate

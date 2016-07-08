@@ -35,5 +35,5 @@ The SSH Directory Mounter
     ```
 *Install project dependency
     ```bash
-	pip install -r python.req
+	    pip install -r python.req
 	```
