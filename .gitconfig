@@ -1,0 +1,4 @@
+#Évite d'avoir à lancer des commande manuellement
+[filter "tabspace"]
+    smudge = unexpand --tabs=4 --first-only
+    clean = expand --tabs=4 --initial
