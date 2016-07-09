@@ -11,8 +11,11 @@ class TkManager(object):
     but you can also get the clicked button value with getAsyncResponse
     """
 
-    def __init__(self):
+    def __init__(self, callback):
         self.tk = Tk()
+        if(callback):
+            #Define what to do on window close
+            self.tk.protocol("WM_DELETE_WINDOW", callback)
         self.content = []
         self.asyncResponse = None
         self.lock = Lock()

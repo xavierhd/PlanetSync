@@ -1,8 +1,8 @@
 
-from Utils.fstab import FstabOperation
+from Utils.fstab.FstabOperation import Operation as FsOperation
 
 
-class Handler(FstabOperation):
+class Handler(FsOperation):
     """
     High level interface with the fstab file
     """
@@ -18,13 +18,13 @@ class Handler(FstabOperation):
         """
         Update the current data with the fstab autogen section
         """
-        super.currentData = self.op.getAutogenSection()
+        self.currentData = self.getAutogenSection()
 
     def add(self, info):
         """
         Add a drive to the fstab
         :param info: A dictionnary containing
-        [shareName, username, hostname, remotePath, remotePath]
+        [shareName, username, hostname, remotePath, localPath]
         """
         self.refreshCurrentData()
         self.currentData[info["shareName"]] = info

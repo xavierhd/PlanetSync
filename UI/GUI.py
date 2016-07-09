@@ -16,10 +16,14 @@ class GUI(object):
         self.mainWindow = self.showMenu()
 
     def showMenu(self):
+        """
+        Init the menu
+        :return: The window menu instance
+        """
         if self.mainWindow:
             tkm = self.mainWindow
         else:
-            tkm = TkManager()
+            tkm = TkManager(self.callBack)
         tkm.addLabel(self.string["menu"]["title"])
         tkm.addLabel(self.string["menu"]["info"])
         tkm.addLabel(self.string["menu"]["operation"])
@@ -99,3 +103,6 @@ class GUI(object):
         else:
             tkm = TkManager()
         return tkm
+
+    def terminate(self):
+        self.mainWindow.destroy()

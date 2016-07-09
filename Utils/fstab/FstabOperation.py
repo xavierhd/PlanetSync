@@ -8,14 +8,16 @@ class Operation(object):
 
     inAutoGen = False
     currentData = {}
-    FSTAB_FILE = "~/test_fstab"
-    headTemplate, entryTemplate, tailTemplate = None
+    FSTAB_FILE = "../../../test_fstab"
+    headTemplate = None
+    entryTemplate = None
+    tailTemplate = None
 
     def __init__(self):
         try:
-            self.headTemplate = read("UI/Template/head.Template")
-            self.entryTemplate = read("UI/Template/entry.Template")
-            self.tailTemplate = read("UI/Template/tail.Template")
+            self.headTemplate = read("Template/head.Template")
+            self.entryTemplate = read("Template/entry.Template")
+            self.tailTemplate = read("Template/tail.Template")
         except Exception as e:
             raise e
 
@@ -36,14 +38,15 @@ class Operation(object):
         fstab = read(self.FSTAB_FILE)
         key = None
 
-        for line in fstab:
-            if line:
-                if self.isAutoGenSection(line):
-                    if not key:
-                        key = self.getKey(line)
-                    else:
-                        autogenSection[key] = line
-                        key = None
+        if fstab:
+            for line in fstab:
+                if line:
+                    if self.isAutoGenSection(line):
+                        if not key:
+                            key = self.getKey(line)
+                        else:
+                            autogenSection[key] = line
+                            key = None
         return autogenSection
 
     def isAutoGenSection(self, line):

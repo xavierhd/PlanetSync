@@ -36,12 +36,16 @@ class Commander(object):
         while self.running:
             Operation.MainMenu(self.gUI, self.callBack)
 
-    def callBack(self, args):
+    def callBack(self, args="quit"):
         """
         Function call if some operation need to return control to the basic Launcher
         """
         if args == "quit":
-            self.running = False
+            self.terminate()
+
+    def terminate(self):
+        self.running = False
+        self.gUI.terminate()
 
 if __name__ == '__main__':
     Commander()

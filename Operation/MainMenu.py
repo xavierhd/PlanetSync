@@ -32,6 +32,13 @@ class MainMenu(object):
             info.update(additionalInfo)
             self.fstabHandler.add(info)
         elif choice == 3:
-            print ("Choice 3")
+            dic = {
+                "shareName": "shareName1",
+                "username": "username1",
+                "hostname": "hostname1",
+                "remotePath": "remotePath1",
+                "localPath": "localPath1",
+            }
+            self.fstabHandler.add(dic)
         elif choice == 4:
             print ("Choice 4")
