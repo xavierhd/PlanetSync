@@ -49,6 +49,16 @@ class Operation(object):
                             key = None
         return autogenSection
 
+    def makeAutogenSection(self, autogenDict):
+        """
+        Build the fstab autogen section
+        :param autogenDict: The data that the fstab file must contain
+        """
+        autogenString = self.headTemplate
+        lineFeed = "\n"
+        for key, value in autogenDict.iteritems():
+            autogenString += self.entryTemplate.format(key) + lineFeed
+
     def isAutoGenSection(self, line):
         """
         Check if the line is inside the autogen section

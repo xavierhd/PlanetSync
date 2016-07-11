@@ -26,15 +26,13 @@ class Handler(FsOperation):
         :param info: A dictionnary containing
         [shareName, username, hostname, remotePath, localPath]
         """
-        self.refreshCurrentData()
+        # TODO: Check if info is already inside
         self.currentData[info["shareName"]] = info
 
-    def makeAutogenSection(self, autogenDict):
+    def remove(self, shareName):
         """
-        Build the fstab autogen section
-        :param autogenDict: The data that the fstab file must contain
+        Remove a drive from the fstab
+        :param shareName: String name of the share (The title in the fstab file)
         """
-        autogenString = self.headTemplate
-        lineFeed = "\n"
-        for key, value in autogenDict.iteritems():
-            autogenString += self.entryTemplate.format(key) + lineFeed
+        result = self.currentData.pop(shareName)
+        return result
