@@ -1,3 +1,5 @@
+from os.path import expanduser
+
 from Utils.FileReader import read
 
 
@@ -8,7 +10,7 @@ class Operation(object):
 
     inAutoGen = False
     currentData = {}
-    FSTAB_FILE = "../../../test_fstab"
+    FSTAB_FILE = expanduser("~")+"/test_fstab"
     headTemplate = None
     entryTemplate = None
     tailTemplate = None

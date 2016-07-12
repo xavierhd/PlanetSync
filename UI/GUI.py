@@ -34,7 +34,7 @@ class GUI(object):
         tkm.addLabel(self.string["advanced"]["title"])
         tkm.addLabel(self.string["advanced"]["info"])
         for entry in self.string["advanced"]["choices"]:
-
+            pass
 
     def getSshInfo(self):
         return {
