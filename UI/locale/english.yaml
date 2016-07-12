@@ -3,11 +3,20 @@ menu:
     info: The SSH Directory Mounter\nCreate an ssh file share with your home's dynamic IP server
     operation: What do you want to do ?
     choice:
-        0: Temporarly mount a folder
+        0: Quick mount a folder (Temporarly)
         1: Add an sshKey to the remote computer
-        2: Mount a folder forever
+        2: Mount a folder "forever"
         3: Unmount a folder
-        4: Remove a folder mounted forever
+        4: Remove a folder mounted "forever"
+advanced:
+    title: Advanced menu
+    info: Manage your static connection (Directory mounted "forever")
+    choice:
+        remote_user: Remote user name
+        remote_ip: Remote computer's ip
+        remote_path: Remote directory path?
+        remote_pw: Remote user password?
+        local_path: Local mounting directory path? (The directory must be empty)
 question:
     confirm: Are you sure that this is what you want to do?
     get:
@@ -15,5 +24,5 @@ question:
         remote_ip: What is the remote ip?
         remote_path: What is the remote directory path?
         remote_pw: What is the remote user password?
-        local_path: What is the local mounting directory path? (it must be empty)
+        local_path: What is the local mounting directory path? (The directory must be  empty)
         share_name: What is the share name?

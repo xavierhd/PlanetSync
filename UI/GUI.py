@@ -29,6 +29,13 @@ class GUI(object):
         tkm.addLabel(self.string["menu"]["operation"])
         return tkm
 
+    def showAdvanced(self):
+        tkm = TkManager()
+        tkm.addLabel(self.string["advanced"]["title"])
+        tkm.addLabel(self.string["advanced"]["info"])
+        for entry in self.string["advanced"]["choices"]:
+
+
     def getSshInfo(self):
         return {
             "hostname": self.getInfo(self.string["question"]["get"]["remote_ip"],
