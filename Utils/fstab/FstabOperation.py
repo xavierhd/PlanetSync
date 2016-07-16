@@ -3,10 +3,15 @@ import re # regex utility
 
 from Utils.FileReader import read, readLine, dump
 
+import FstabEntity
+
+
 class Operation(object):
     """
     Low level interface with the fstab file
     """
+
+    fstab = None
 
     inAutoGen = False
     FSTAB_FILE = expanduser("~")+"/test_fstab"
@@ -23,6 +28,8 @@ class Operation(object):
 
     def __init__(self):
         self.loadTemplate()
+        self.fstab = FstabEntity()
+
 
     def getKey(self, line):
         key = None
