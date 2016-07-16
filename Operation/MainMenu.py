@@ -40,5 +40,6 @@ class MainMenu(object):
                 "localPath": "localPath1",
             }
             self.fstabHandler.add(dic)
+            self.fstabHandler.save()
         elif choice == 4:
             print ("Choice 4")

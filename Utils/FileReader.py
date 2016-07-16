@@ -19,10 +19,24 @@ def read(filePath):
         print ("Could not find file: {0}\n {1}".format(filePath, e))
     return content
 
-
-def dump(filePath, content):
+def readLine(filePath):
+    content = []
     try:
         with open(filePath) as file:
+            content = file.readlines()
+    except FileNotFoundError as e:
+        print ("Could not find file: {0}\n {1}".format(filePath, e))
+    return content
+
+def dump(filePath, content, append=False):
+    print(content)
+    openOption = "w"
+
+    if append:
+        openOption = "w+"
+
+    try:
+        with open(filePath, openOption) as file:
             file.write(content)
     except FileNotFoundError as e:
         print ("Could not find file: {0}\n {1}".format(filePath, e))

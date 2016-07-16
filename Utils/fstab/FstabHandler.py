@@ -1,5 +1,6 @@
 
 from Utils.fstab.FstabOperation import Operation as FsOperation
+from Utils import FileReader
 
 
 class Handler(FsOperation):
@@ -11,14 +12,15 @@ class Handler(FsOperation):
         self.init()
 
     def init(self):
-        super()
+        super().__init__()
         self.refreshCurrentData()
 
     def refreshCurrentData(self):
         """
         Update the current data with the fstab autogen section
         """
-        self.currentData = self.getAutogenSection()
+        self.currentData = self.parseSections()
+        print (self.currentData)
 
     def add(self, info):
         """
@@ -36,3 +38,9 @@ class Handler(FsOperation):
         """
         result = self.currentData.pop(shareName)
         return result
+
+    def save(self):
+        """
+        Save the content of the currentData to the fstab file
+        """
+        self.commit()
