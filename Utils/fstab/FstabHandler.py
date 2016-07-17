@@ -19,7 +19,7 @@ class Handler(FsOperation):
         """
         Update the current data with the fstab autogen section
         """
-        self.currentData = self.parseSectionsInto(self.fstab)
+        self.currentData = self.parseSections(self.fstab)
 
     def add(self, info):
         """

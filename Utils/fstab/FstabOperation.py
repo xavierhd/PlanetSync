@@ -30,12 +30,11 @@ class Operation(object):
         regex = "##"
         if line:
             split = re.split(regex, line)
-            print(split)
             if len(split) >= 2:
                 key = split[1]
         return key
 
-    def parseSectionsInto(self, fstabEntity):
+    def parseSections(self, fstabEntity):
         """
         Parse the fstab into 3 sections: preAutogen, autogen and afterAutogen
         :param fstabEntity: An fstab object made of a FstabEntity
@@ -44,30 +43,36 @@ class Operation(object):
         autogenSection = {}
         fstab = readLine(fstabEntity.path)
         key = None
-        # If read had returned something
+        # If read have returned something
         if fstab:
             for line in fstab:
 
-                # If we are inside the autogen section and the line isn't empty
-                if line and self.isAutoGenSection(line):
+                # If we are inside the autogen section and the line isn't empty (in fact a nextLine char)
+                if line != "/n" and self.isAutoGenSection(line):
+                    # Remove the nextLine character from the line
+                    line = line[:len(line)-1]
+
                     # Make sure that the first run doesn't try to find a key in headTemplate
                     if self.inAutoGen:
+                        # If there is no key, we try to find one
                         if not key:
                             key = self.getKey(line)
+                        # We use the key to link the line to it
                         else:
-                            autogenSection[key] = line
+                            fstabEntity.data[key] = line
                             key = None
                     else:
                         self.inAutoGen = True
 
                 # If we are outside and before of autogen section
-                elif not self.inAutoGen and not autogenSection:
-                    fstabEntity.addToPreAutogen(line)
+                elif not self.inAutoGen and not fstabEntity.data:
+                    fstabEntity.addToPre(line)
 
                 # If we are outside and after of autogen section
-                elif not self.inAutoGen and autogenSection:
-                    fstabEntity.addToAfterAutogen(line)
-        return autogenSection
+                elif not self.inAutoGen and fstabEntity.data:
+                    fstabEntity.addToAfter(line)
+
+        return fstabEntity.data
 
     def loadTemplate(self):
         templateDirectory = dirname(abspath(__file__)) + "/Template"
@@ -79,9 +84,8 @@ class Operation(object):
         """
         Save the content of the currentData to the fstab file
         """
-        autogen = self.makeAutogenSection(self.currentData)
-        fstabContent = self.rebuildFstab(self.preAutogen, autogen, self.afterAutogen)
-        dump(self.FSTAB_FILE, fstabContent)
+        fstabContent = self.rebuildFstab(self.fstab)
+        dump(self.fstab.path, fstabContent)
 
     def makeAutogenSection(self, autogenDict):
         """
@@ -97,7 +101,7 @@ class Operation(object):
         autogenString += self.tailTemplate + lineFeed
         return autogenString
 
-    def rebuildFstab(self, before, autogen, after):
+    def rebuildFstab(self, fstabEntity):
         """
         Concatenate the 3 strings together
         :param before: a list of every line of the content before the autogen section
@@ -107,13 +111,15 @@ class Operation(object):
         """
         lineFeed = "\n"
         fstab = ""
-        for line in before:
+        autogen = self.makeAutogenSection(fstabEntity.data)
+
+        for line in fstabEntity.pre:
             fstab += line
 
         fstab += lineFeed
         fstab += autogen
 
-        for line in after:
+        for line in fstabEntity.after:
             fstab += line
 
         return fstab
@@ -126,11 +132,11 @@ class Operation(object):
 
         if not self.inAutoGen:
             # If the current line equal to the head -> we enter the autogen
-            if line == self.headTemplate + "\n":
+            if line == self.headTemplate:
                 result = True
         else:
             # If the current line equal to the tail -> we exit the autogen
-            if self.compare(line, self.tailTemplate + "\n"):
+            if line == self.tailTemplate:
                 self.inAutoGen = False
             else:
                 result = True
