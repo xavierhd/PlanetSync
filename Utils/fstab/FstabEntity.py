@@ -9,12 +9,18 @@ class FstabEntity(object):
 
     def __init__(self, path):
         self.path = path
+        self.reset()
 
     def addToPre(self, line):
         self.pre.append(line)
 
     def addToAfter(self, line):
         self.after.append(line)
+
+    def reset(self):
+        self.pre = []
+        self.data = {}
+        self.after = []
 
     def clone(self):
         fstab = FstabEntity(self.path)

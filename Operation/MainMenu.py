@@ -13,7 +13,6 @@ class MainMenu(object):
         self.fstabHandler = Handler()
         self.gUI = gUI
         self.gUI.showMenu()
-        # pprint (self.gUI.string)
         self.gUI.getChoices(self.gUI.string["menu"]["operation"],
                             self.gUI.string["menu"]["choice"],
                             tkManager=self.gUI.mainWindow,

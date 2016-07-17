@@ -14,15 +14,6 @@ class Commander(object):
 
     running = None
 
-    cmd = {
-        "mount": "sshfs {remoteUser}@{remoteIP}:{remotePath} {localPath}",
-        "unmount":"fusermount -u {localPath}",
-        "push to server": "scp {localFilePath} {remoteUser}@{remoteIP}:{remoteFilePath}",
-        "add to file": "cat {remoteFilePath} >> /home/{remoteUser}/.ssh/authorized_keys",
-        "add self to cron": "(crontab -l ; echo '00 09 * * 1-5 runUpdateScript') | crontab -",
-        "remoteCommand": "ssh -t {remoteIP} '{command}'"
-    }
-
     def __init__(self):
         self.gUI = GUI(self.callBack, language="english")
         self.run()

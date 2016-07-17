@@ -43,23 +43,24 @@ class Operation(object):
         autogenSection = {}
         fstab = readLine(fstabEntity.path)
         key = None
+        fstabEntity.reset()
         # If read have returned something
         if fstab:
             for line in fstab:
 
                 # If we are inside the autogen section and the line isn't empty (in fact a nextLine char)
                 if line != "/n" and self.isAutoGenSection(line):
-                    # Remove the nextLine character from the line
-                    line = line[:len(line)-1]
 
                     # Make sure that the first run doesn't try to find a key in headTemplate
                     if self.inAutoGen:
                         # If there is no key, we try to find one
                         if not key:
+                            # Remove the nextLine character from the line
+                            line = line[:len(line)-1]
                             key = self.getKey(line)
                         # We use the key to link the line to it
                         else:
-                            fstabEntity.data[key] = line
+                            autogenSection[key] = line
                             key = None
                     else:
                         self.inAutoGen = True
@@ -72,7 +73,29 @@ class Operation(object):
                 elif not self.inAutoGen and fstabEntity.data:
                     fstabEntity.addToAfter(line)
 
+                # If none of the case before are True, we reset the state of the parsing to "not in autogen".
+                # This case happen right after isAutoGenSection() return false, while self.inAutoGen is True. -> when "line" == "tail.template"
+                else:
+                    self.inAutoGen = False
+        fstabEntity.data = self.parseData(autogenSection)
         return fstabEntity.data
+
+    def parseData(self, dataSection):
+        """
+        Parse the raw data from the fstab's autogen retrieved section
+        """
+        data = {}
+        pattern = re.compile(r"#(?P<username>(?:[A-z._])\w+)") # @(?P<hostname>(?:[A-z._])\w+):(?P<remotePath>(?:(?:\/[A-z._-])\w+)+) (?P<localPath>(?:(?:\/[A-z._-])\w+)+)
+        # pattern = re.compile("#(?P<username>[A-z._])\w+@(?P<hostname>[A-z._])\w+:(?P<remotePath>(?:\/[A-z._-])\w+)+ (?P<localPath>(?:\/[A-z._-])\w+)+")
+        for key, stringData in dataSection.items():
+            print (key)
+            print (stringData)
+            match = re.match(r"#(?P<username>(?:[A-z 1-9._])\w+)", stringData)
+            if(match):
+                data[key] = match.group("username")
+            else:
+                print ("caca")
+        return data
 
     def loadTemplate(self):
         templateDirectory = dirname(abspath(__file__)) + "/Template"
@@ -96,9 +119,9 @@ class Operation(object):
         autogenString = self.headTemplate + lineFeed
 
         for key, value in autogenDict.items():
-            autogenString += self.entryTemplate.format(**value) + lineFeed
+            autogenString += self.entryTemplate.format(**value)
 
-        autogenString += self.tailTemplate + lineFeed
+        autogenString += self.tailTemplate
         return autogenString
 
     def rebuildFstab(self, fstabEntity):
@@ -116,7 +139,6 @@ class Operation(object):
         for line in fstabEntity.pre:
             fstab += line
 
-        fstab += lineFeed
         fstab += autogen
 
         for line in fstabEntity.after:
@@ -136,9 +158,7 @@ class Operation(object):
                 result = True
         else:
             # If the current line equal to the tail -> we exit the autogen
-            if line == self.tailTemplate:
-                self.inAutoGen = False
-            else:
+            if line != self.tailTemplate:
                 result = True
 
         return result
@@ -153,7 +173,7 @@ class Operation(object):
 
         for i in range(0, len(stringOne)):
             try:
-                # Can raise an IndexError
+                # Can raise an IndexError too
                 if stringOne[i] != stringTwo[i]:
                     raise Exception
             except Exception as e:
@@ -161,3 +181,4 @@ class Operation(object):
         else:
             result = True
         return result
+        # ?P<name> is an ID that can be retrieved with the match object
