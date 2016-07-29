@@ -85,16 +85,18 @@ class Operation(object):
         Parse the raw data from the fstab's autogen retrieved section
         """
         data = {}
-        pattern = re.compile(r"#(?P<username>(?:[A-z._])\w+)") # @(?P<hostname>(?:[A-z._])\w+):(?P<remotePath>(?:(?:\/[A-z._-])\w+)+) (?P<localPath>(?:(?:\/[A-z._-])\w+)+)
-        # pattern = re.compile("#(?P<username>[A-z._])\w+@(?P<hostname>[A-z._])\w+:(?P<remotePath>(?:\/[A-z._-])\w+)+ (?P<localPath>(?:\/[A-z._-])\w+)+")
+        pattern = re.compile(r"sshfs#(?P<username>(?:[\w\d\s_\+-])+)@(?P<hostname>(?:[\w\d\s_\+-])+)")#:(?P<remotePath>(?:(?:\/[\w\d\s_\+-])+)+) (?P<localPath>(?:(?:\/[A-z._-])+)+)")
+        # pattern = re.compile(r"(?P<username>(?:[\w\d\s])+)") # @(?P<hostname>(?:[A-z._])\w+):(?P<remotePath>(?:(?:\/[A-z._-])\w+)+) (?P<localPath>(?:(?:\/[A-z._-])\w+)+)
+        # pattern = re.compile("#(?P<username>[\w])+@(?P<hostname>[\w])+:(?P<remotePath>(?:\/[\w])+)+ (?P<localPath>(?:\/[A-z._-])\w+)+")
         for key, stringData in dataSection.items():
             print (key)
             print (stringData)
-            match = re.match(r"#(?P<username>(?:[A-z 1-9._])\w+)", stringData)
+            match = pattern.match(stringData)
             if(match):
-                data[key] = match.group("username")
+                data[key] = pattern.groupindex
             else:
                 print ("caca")
+        print(data)
         return data
 
     def loadTemplate(self):
