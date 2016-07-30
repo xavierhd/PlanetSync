@@ -53,7 +53,7 @@ class Operation(object):
 
                     # Make sure that the first run doesn't try to find a key in headTemplate
                     if self.inAutoGen:
-                        # If there is no key, we try to find one
+                        # If there is no key saved, we try to find one
                         if not key:
                             # Remove the nextLine character from the line
                             line = line[:len(line)-1]
@@ -65,11 +65,11 @@ class Operation(object):
                     else:
                         self.inAutoGen = True
 
-                # If we are outside and before of autogen section
+                # If we are outside and before the autogen section
                 elif not self.inAutoGen and not fstabEntity.data:
                     fstabEntity.addToPre(line)
 
-                # If we are outside and after of autogen section
+                # If we are outside and after the autogen section
                 elif not self.inAutoGen and fstabEntity.data:
                     fstabEntity.addToAfter(line)
 
@@ -85,18 +85,22 @@ class Operation(object):
         Parse the raw data from the fstab's autogen retrieved section
         """
         data = {}
-        pattern = re.compile(r"sshfs#(?P<username>(?:[\w\d\s_\+-])+)@(?P<hostname>(?:[\w\d\s_\+-])+)")#:(?P<remotePath>(?:(?:\/[\w\d\s_\+-])+)+) (?P<localPath>(?:(?:\/[A-z._-])+)+)")
-        # pattern = re.compile(r"(?P<username>(?:[\w\d\s])+)") # @(?P<hostname>(?:[A-z._])\w+):(?P<remotePath>(?:(?:\/[A-z._-])\w+)+) (?P<localPath>(?:(?:\/[A-z._-])\w+)+)
-        # pattern = re.compile("#(?P<username>[\w])+@(?P<hostname>[\w])+:(?P<remotePath>(?:\/[\w])+)+ (?P<localPath>(?:\/[A-z._-])\w+)+")
+        # ?P<name> is an ID that can be retrieved with the match object
+        pattern = re.compile(r"sshfs#(?P<username>(?:[\w\d\s_\+-])+)@(?P<hostname>(?:[\w\d\s_\+-])+)")#:(?P<remotePath>([^ !$`&*()+]|(\\[ !$`&*()+]))+) (?P<localPath>([^ !$`&*()+]|(\\[ !$`&*()+]))+)")#(?:(?:\/[\w\d\s_\+-])+)+) (?P<localPath>(?:(?:\/[A-z._-])+)+)")
+
         for key, stringData in dataSection.items():
-            print (key)
-            print (stringData)
+            # groupindex is a dictionary of all the ?P<name> in the regex
+            data[key] = pattern.groupindex
             match = pattern.match(stringData)
             if(match):
-                data[key] = pattern.groupindex
+                for group in data[key]:
+                    print (group)
+                    data[key][group] = match.group(group)
             else:
-                print ("caca")
-        print(data)
+                print ("Something is wrong")
+            # print (key)
+            # print (stringData)
+        # print(data)
         return data
 
     def loadTemplate(self):
@@ -120,15 +124,17 @@ class Operation(object):
         lineFeed = "\n"
         autogenString = self.headTemplate + lineFeed
 
-        for key, value in autogenDict.items():
-            autogenString += self.entryTemplate.format(**value)
+        from pprint import pprint
+        pprint (autogenDict)
+        for key in autogenDict:
+            autogenString += self.entryTemplate.format(shareName=key, **autogenDict[key])
 
         autogenString += self.tailTemplate
         return autogenString
 
     def rebuildFstab(self, fstabEntity):
         """
-        Concatenate the 3 strings together
+        Concatenate the 3 fstab parts together
         :param before: a list of every line of the content before the autogen section
         :param autoGen: the string representation of the autogen section
         :param after: a list of every line of the content after the autogen section
@@ -183,4 +189,3 @@ class Operation(object):
         else:
             result = True
         return result
-        # ?P<name> is an ID that can be retrieved with the match object

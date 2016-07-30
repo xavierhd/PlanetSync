@@ -32,11 +32,11 @@ class MainMenu(object):
             self.fstabHandler.add(info)
         elif choice == 3:
             dic = {
-                "shareName": "shareName1",
-                "username": "username1",
-                "hostname": "hostname1",
-                "remotePath": "remotePath1",
-                "localPath": "localPath1",
+                "shareName": "bob's computer",
+                "username": "bob",
+                "hostname": "192.146.543.12",
+                "remotePath": "remotePath1/unix/path/spécialChar\'asd",
+                "localPath": "localPath1/baskd/123hnfk/asld\ asd/pop",
             }
             self.fstabHandler.add(dic)
             self.fstabHandler.save()

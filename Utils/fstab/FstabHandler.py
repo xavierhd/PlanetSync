@@ -28,14 +28,15 @@ class Handler(FsOperation):
         [shareName, username, hostname, remotePath, localPath]
         """
         # TODO: Check if info is already inside
-        self.currentData[info["shareName"]] = info
+        # Right now the defaut is to overwrite any shared drive having the same name as another
+        self.fstab.data[info.pop("shareName")] = info
 
     def remove(self, shareName):
         """
         Remove a drive from the fstab
         :param shareName: String name of the share (The title in the fstab file)
         """
-        result = self.currentData.pop(shareName)
+        result = self.fstab.pop(shareName)
         return result
 
     def save(self):
