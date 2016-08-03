@@ -1,5 +1,6 @@
 from os.path import expanduser, dirname, abspath
 import re # regex utility
+from copy import copy
 
 from Utils.FileReader import read, readLine, dump
 
@@ -86,21 +87,18 @@ class Operation(object):
         """
         data = {}
         # ?P<name> is an ID that can be retrieved with the match object
-        pattern = re.compile(r"sshfs#(?P<username>(?:[\w\d\s_\+-])+)@(?P<hostname>(?:[\w\d\s_\+-])+)")#:(?P<remotePath>([^ !$`&*()+]|(\\[ !$`&*()+]))+) (?P<localPath>([^ !$`&*()+]|(\\[ !$`&*()+]))+)")#(?:(?:\/[\w\d\s_\+-])+)+) (?P<localPath>(?:(?:\/[A-z._-])+)+)")
+        pattern = re.compile(r"sshfs#(?P<username>(?:[\w\d\s_\+-])+)@(?P<hostname>(?:[\w\d\s_\+-])+)")#:(?P<remotePath>(/[^ !$`&*()+]|(\\[ !$`&*()+]))+) (?P<localPath>(/[^ !$`&*()+]|(\\[ !$`&*()+]))+)")#(?:(?:\/[\w\d\s_\+-])+)+) (?P<localPath>(?:(?:\/[A-z._-])+)+)")
 
         for key, stringData in dataSection.items():
-            # groupindex is a dictionary of all the ?P<name> in the regex
-            data[key] = pattern.groupindex
             match = pattern.match(stringData)
             if(match):
+                # groupindex is a dictionary of all the ?P<name> in the regex
+                data[key] = copy(pattern.groupindex)
                 for group in data[key]:
-                    print (group)
+                    da = match.groups()
                     data[key][group] = match.group(group)
             else:
                 print ("Something is wrong")
-            # print (key)
-            # print (stringData)
-        # print(data)
         return data
 
     def loadTemplate(self):
