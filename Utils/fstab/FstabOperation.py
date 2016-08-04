@@ -67,11 +67,11 @@ class Operation(object):
                         self.inAutoGen = True
 
                 # If we are outside and before the autogen section
-                elif not self.inAutoGen and not fstabEntity.data:
+                elif not self.inAutoGen and not autogenSection:
                     fstabEntity.addToPre(line)
 
                 # If we are outside and after the autogen section
-                elif not self.inAutoGen and fstabEntity.data:
+                elif not self.inAutoGen and autogenSection:
                     fstabEntity.addToAfter(line)
 
                 # If none of the case before are True, we reset the state of the parsing to "not in autogen".
@@ -87,7 +87,7 @@ class Operation(object):
         """
         data = {}
         # ?P<name> is an ID that can be retrieved with the match object
-        pattern = re.compile(r"sshfs#(?P<username>(?:[\w\d\s_\+-])+)@(?P<hostname>(?:[\w\d\s_\+-])+)")#:(?P<remotePath>(/[^ !$`&*()+]|(\\[ !$`&*()+]))+) (?P<localPath>(/[^ !$`&*()+]|(\\[ !$`&*()+]))+)")#(?:(?:\/[\w\d\s_\+-])+)+) (?P<localPath>(?:(?:\/[A-z._-])+)+)")
+        pattern = re.compile(r"sshfs#(?P<username>(?:[\w\d\s_\+-])+)@(?P<hostname>(?:[\w\d_\+-.])+):(?P<remotePath>(?:\/|[\w\d_\+-.]|(?:\\[^\w\d_\+-.]))+) (?P<localPath>(?:\/|[\w\d_\+-.]|(?:\\[^\w\d_\+-.]))+)")
 
         for key, stringData in dataSection.items():
             match = pattern.match(stringData)
@@ -121,9 +121,7 @@ class Operation(object):
         """
         lineFeed = "\n"
         autogenString = self.headTemplate + lineFeed
-
-        from pprint import pprint
-        pprint (autogenDict)
+        
         for key in autogenDict:
             autogenString += self.entryTemplate.format(shareName=key, **autogenDict[key])
 

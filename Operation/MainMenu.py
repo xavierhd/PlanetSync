@@ -35,8 +35,8 @@ class MainMenu(object):
                 "shareName": "bob's computer",
                 "username": "bob",
                 "hostname": "192.146.543.12",
-                "remotePath": "remotePath1/unix/path/spécialChar\'asd",
-                "localPath": "localPath1/baskd/123hnfk/asld\ asd/pop",
+                "remotePath": "/remotePath1/unix/path/spécialChar\\'asd",
+                "localPath": "/localPath1/baskd/123hnfk/asld\ asd/pop",
             }
             self.fstabHandler.add(dic)
             self.fstabHandler.save()
