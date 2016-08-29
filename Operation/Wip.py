@@ -14,9 +14,20 @@ class Wip:
 
     def __init__(self, tkm):
         self.tkm = tkm
-        self.setPrimaryList()
+        self.tkm.removeAll()
+        primaryList = self.tkm.addListBox()
+        secondaryList = self.tkm.addListBox()
 
-    def setPrimaryList(self, serverList):
-        self.primaryList.delete(0, END)
+    def setListBox(self, listBox, serverList):
+        listBox.delete(0, END)
         for server in serverList:
-            self.primaryList.insert(END, server)
+            listBox.insert(END, server)
+
+    def addToList(self, listBox, newItem):
+        listBox.insert(END, newItem)
+
+    def callback(self, caller, args):
+        if caller is self.primaryList:
+            self.setListBox(self.secondaryList, info)
+        elif caller is self.secondaryList:
+            self.setListBox(self.primaryList, info)
