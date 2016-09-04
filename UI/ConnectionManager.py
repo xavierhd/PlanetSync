@@ -1,12 +1,20 @@
 from UI.TkManager import TkManager
 from UI import LangSelector
+from tkinter import Listbox, END
 
 
-class GUI(object):
+class ConnectionManager(object):
     """
-    Tkinter GUI, high level tools
+    Interface ayant une liste sélectionnable de serveur.
+    Chaque item cliqué affiche la liste des partages associés dans une liste secondaire.
+    Un "Double clique?"/"Bouton à droite" sur un item de l'inteface permet de modifier ces informations.
     """
 
+    tkm = None
+    primaryList = Listbox()
+    secondaryList = Listbox()
+    
+    callBack = None
     mainWindow = None
     string = None
 
@@ -14,6 +22,11 @@ class GUI(object):
         self.callBack = callBack
         self.string = LangSelector.getLang(language)
         self.mainWindow = self.showMenu()
+
+    def setPrimaryList(self, serverList):
+        self.primaryList.delete(0, END)
+        for server in serverList:
+            self.primaryList.insert(END, server)
 
     def showMenu(self):
         """
@@ -43,8 +56,33 @@ class GUI(object):
             "username": self.getInfo(self.string["question"]["get"]["remote_user"],
                                      tkManager=self.mainWindow),
             "password": self.getPassword(self.string["question"]["get"]["remote_pw"],
-                                        tkManager=self.mainWindow)
+                                         tkManager=self.mainWindow)
                 }
+
+    def sshInfoWindow(self, entry=None):
+        tkm = self.getTkManager(None)
+        # tkm.addTitle("SSH connection entry")
+        tkm.addLabel("Please provide your remote computer's information: ")
+        tkm.addLabel(self.string["question"]["get"]["remote_ip"])
+        entryHostname = tkm.addEntry()
+        tkm.addLabel(self.string["question"]["get"]["remote_user"])
+        entryUsername = tkm.addEntry()
+        tkm.addLabel(self.string["question"]["get"]["remote_pw"])
+        entryPassword = tkm.addEntry(True)
+        if entry:
+            entryHostname.set(entry["hostname"])
+            entryUsername.set(entry["username"])
+            entryPassword.set(entry["password"])
+
+        tkm.addButton("Continue", mustReturn=False)
+        tkm.run()
+        return {"hostname": entryHostname.get(),
+                "username": entryUsername.get(),
+                "password": entryPassword.get(),
+                }
+
+    def sshfsInfoWindow(self):
+        tkm = self.getTkManager(None)
 
     def getSshfsInfo(self):
         info = self.getSshInfo()
@@ -85,8 +123,7 @@ class GUI(object):
 
     def getChoices(self, title, choices, tkManager=None, isPopup=False, callback=None):
         """
-        Show a list of button choice to the user
-        :param choices: array of choices
+        Choices: array of choices
         :return the chosen index
         """
         tkm = self.getTkManager(tkManager)

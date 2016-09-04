@@ -10,7 +10,7 @@ from UI.GUI import GUI
 import Operation
 
 
-class Commander(object):
+class PlanetSync(object):
 
     running = None
 
@@ -39,4 +39,4 @@ class Commander(object):
         self.gUI.terminate()
 
 if __name__ == '__main__':
-    Commander()
+    PlanetSync()

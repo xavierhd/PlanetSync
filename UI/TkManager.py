@@ -11,10 +11,10 @@ class TkManager(object):
     but you can also get the clicked button value with getAsyncResponse
     """
 
-    def __init__(self, callback):
+    def __init__(self, callback=None):
         self.tk = Tk()
-        if(callback):
-            #Define what to do on window close
+        if callback:
+            # Define what to do on window close
             self.tk.protocol("WM_DELETE_WINDOW", callback)
         self.content = []
         self.asyncResponse = None
@@ -41,7 +41,20 @@ class TkManager(object):
         self.lastContent().grid(row=len(self.content))
         return self.lastContent()
 
+    def addListBox(self, actionButtonText=None, callback=None, args=None):
+        self.content.append(ListBox(self.tk))
+        self.lastContent().grid(row=len(self.content))
+        return self.lastContent()
+
     def addButton(self, text, mustReturn=False, callback=None, args=None):
+        """
+        Add a button to the tkWindow
+        :param text: The content of the button
+        :param mustReturn: True to destroy the window, False to only return control to the caller
+        :param callback: A function executed on button press
+        :param args: The argument to give to the callback
+        :return: The button instance
+        """
         action = [callback, self.destroy if mustReturn else self.quit]
         args = [args, None]
         onClick = self.makeLambda(action, args)
