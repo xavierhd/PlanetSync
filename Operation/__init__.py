@@ -1,1 +1,1 @@
-from Operation.MainMenu import MainMenu
+from Operation.EasyMenu import EasyMenu

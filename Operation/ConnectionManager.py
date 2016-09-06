@@ -6,11 +6,11 @@ Un "Double clique?"/"Bouton à droite" sur un item de l'inteface permet de modif
 
 from tkinter import Listbox, END
 
-class Wip:
+class ConnectionManager:
 
     tkm = None
-    primaryList = Listbox()
-    secondaryList = Listbox()
+    primaryList = None
+    secondaryList = None
 
     def __init__(self, tkm):
         self.tkm = tkm

@@ -6,8 +6,11 @@
 """
 from pprint import pprint
 
-from UI.GUI import GUI
+from UI.EasyMenu import EasyMenu
 import Operation
+
+from Operation.ConnectionManager import ConnectionManager
+from Utils.fstab.FstabHandler import Handler as FsHandler
 
 
 class PlanetSync(object):
@@ -15,7 +18,8 @@ class PlanetSync(object):
     running = None
 
     def __init__(self):
-        self.gUI = GUI(self.callBack, language="english")
+        self.gUI = EasyMenu(self.callBack, language="english")
+        self.fstabHandler = FsHandler()
         self.run()
         print ("This is the end")
 
@@ -25,7 +29,7 @@ class PlanetSync(object):
         """
         self.running = True
         while self.running:
-            Operation.MainMenu(self.gUI, self.callBack)
+            Operation.EasyMenu(self.fstabHandler, self.gUI, self.callBack)
 
     def callBack(self, args="quit"):
         """
@@ -33,6 +37,8 @@ class PlanetSync(object):
         """
         if args == "quit":
             self.terminate()
+        if args == "connectionManager":
+            ConnectionManager(self.fstabHandler)
 
     def terminate(self):
         self.running = False

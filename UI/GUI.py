@@ -1,5 +1,5 @@
 from UI.TkManager import TkManager
-from UI import LangSelector
+from Locale import LangSelector
 
 
 class GUI(object):
@@ -7,60 +7,18 @@ class GUI(object):
     Tkinter GUI, high level tools
     """
 
-    mainWindow = None
+    window = None
     string = None
 
-    def __init__(self, callBack, language="english"):
-        self.callBack = callBack
+    def __init__(self, callback, language="english"):
+        self.callback = callback
         self.string = LangSelector.getLang(language)
-        self.mainWindow = self.showMenu()
+        self.window = self.show()
 
-    def showMenu(self):
-        """
-        Init the menu
-        :return: The window menu instance
-        """
-        if self.mainWindow:
-            tkm = self.mainWindow
-        else:
-            tkm = TkManager(self.callBack)
-        tkm.addLabel(self.string["menu"]["title"])
-        tkm.addLabel(self.string["menu"]["info"])
-        tkm.addLabel(self.string["menu"]["operation"])
-        return tkm
-
-    def showAdvanced(self):
-        tkm = TkManager()
-        tkm.addLabel(self.string["advanced"]["title"])
-        tkm.addLabel(self.string["advanced"]["info"])
-        for entry in self.string["advanced"]["choices"]:
-            pass
-
-    def getSshInfo(self):
-        return {
-            "hostname": self.getInfo(self.string["question"]["get"]["remote_ip"],
-                                     tkManager=self.mainWindow),
-            "username": self.getInfo(self.string["question"]["get"]["remote_user"],
-                                     tkManager=self.mainWindow),
-            "password": self.getPassword(self.string["question"]["get"]["remote_pw"],
-                                        tkManager=self.mainWindow)
-                }
-
-    def getSshfsInfo(self):
-        info = self.getSshInfo()
-        info["remotePath"] = self.getInfo(self.string["question"]["get"]["remote_path"],
-                                          tkManager=self.mainWindow)
-        info["localPath"] = self.getInfo(self.string["question"]["get"]["local_path"],
-                                         tkManager=self.mainWindow)
-        return info
-
-    ##################
-    # General method #
-    ##################
     def info(self, msg, tkManager=None, isPopup=True):
         tkm = self.getTkManager(tkManager)
         tkm.addLabel(msg)
-        if tkm is not self.mainWindow:
+        if tkm is not self.window:
             tkm.addButton("Understood!", mustReturn=isPopup)
         if isPopup:
             tkm.run()
@@ -113,4 +71,4 @@ class GUI(object):
         return tkm
 
     def terminate(self):
-        self.mainWindow.destroy()
+        self.window.destroy()

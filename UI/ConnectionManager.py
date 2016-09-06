@@ -1,9 +1,10 @@
 from UI.TkManager import TkManager
 from UI import LangSelector
+from UI.GUI import GUI
 from tkinter import Listbox, END
 
 
-class ConnectionManager(object):
+class ConnectionManager(GUI):
     """
     Interface ayant une liste sélectionnable de serveur.
     Chaque item cliqué affiche la liste des partages associés dans une liste secondaire.
@@ -11,36 +12,34 @@ class ConnectionManager(object):
     """
 
     tkm = None
-    primaryList = Listbox()
-    secondaryList = Listbox()
-    
-    callBack = None
-    mainWindow = None
-    string = None
+    window = None
+    primaryList = None
+    secondaryList = None
 
-    def __init__(self, callBack, language="english"):
-        self.callBack = callBack
-        self.string = LangSelector.getLang(language)
-        self.mainWindow = self.showMenu()
+    def __init__(self, callBack, language):
+        super().__init__(callBack, language)
+        self.primaryList = self.tkm.addListBox()
+        self.secondaryList = self.tkm.addListBox()
+        self.window = self.show()
 
-    def setPrimaryList(self, serverList):
-        self.primaryList.delete(0, END)
-        for server in serverList:
-            self.primaryList.insert(END, server)
-
-    def showMenu(self):
+    def show(self):
         """
-        Init the menu
-        :return: The window menu instance
+        Init the window
+        :return: The window instance
         """
-        if self.mainWindow:
-            tkm = self.mainWindow
+        if self.window:
+            tkm = self.window
         else:
             tkm = TkManager(self.callBack)
-        tkm.addLabel(self.string["menu"]["title"])
-        tkm.addLabel(self.string["menu"]["info"])
-        tkm.addLabel(self.string["menu"]["operation"])
+        tkm.addLabel(self.string["connectionManager"]["title"])
+        tkm.addLabel(self.string["connectionManager"]["info"])
+        tkm.addLabel(self.string["connectionManager"]["operation"])
         return tkm
+
+    def setList(self, list, serverList):
+        self.list.delete(0, END)
+        for server in serverList:
+            self.list.insert(END, server)
 
     def showAdvanced(self):
         tkm = TkManager()
@@ -59,7 +58,7 @@ class ConnectionManager(object):
                                          tkManager=self.mainWindow)
                 }
 
-    def sshInfoWindow(self, entry=None):
+    def sshfsInfoWindow(self, entry=None):
         tkm = self.getTkManager(None)
         # tkm.addTitle("SSH connection entry")
         tkm.addLabel("Please provide your remote computer's information: ")
@@ -81,73 +80,25 @@ class ConnectionManager(object):
                 "password": entryPassword.get(),
                 }
 
+    def mountInfoWindow(self, entry=None):
+        tkm = self.getTkManager(None)
+        # tkm.addTitle("SSH connection entry")
+        tkm.addLabel(self.string["question"]["get"]["remote_path"])
+        entryRemotePath = tkm.addEntry()
+        tkm.addLabel(self.string["question"]["get"]["local_path"])
+        entryLocalPath = tkm.addEntry()
+        if entry:
+            entryRemotePath.set(entry["remote_path"])
+            entryLocalPath.set(entry["local_path"])
+
+        tkm.addButton("Continue", mustReturn=False)
+        tkm.run()
+        return {"hostname": entryRemotePath.get(),
+                "username": entryLocalPath.get(),
+                }
+
     def sshfsInfoWindow(self):
         tkm = self.getTkManager(None)
-
-    def getSshfsInfo(self):
-        info = self.getSshInfo()
-        info["remotePath"] = self.getInfo(self.string["question"]["get"]["remote_path"],
-                                          tkManager=self.mainWindow)
-        info["localPath"] = self.getInfo(self.string["question"]["get"]["local_path"],
-                                         tkManager=self.mainWindow)
-        return info
-
-    ##################
-    # General method #
-    ##################
-    def info(self, msg, tkManager=None, isPopup=True):
-        tkm = self.getTkManager(tkManager)
-        tkm.addLabel(msg)
-        if tkm is not self.mainWindow:
-            tkm.addButton("Understood!", mustReturn=isPopup)
-        if isPopup:
-            tkm.run()
-
-    def getPassword(self, msg='Enter your password', tkManager=None, isPopup=False):
-        tkm = self.getTkManager(tkManager)
-        tkm.removeAll()
-        tkm.addLabel(msg)
-        entry = tkm.addEntry(isPassword=True)
-        tkm.addButton("Continue", mustReturn=isPopup, callback=tkm.setAsyncResponse, args=entry.get)
-        tkm.run()
-        return tkm.getAsyncResponse()
-
-    def getInfo(self, msg, tkManager=None, isPopup=False):
-        tkm = self.getTkManager(tkManager)
-        tkm.removeAll()
-        tkm.addLabel(msg)
-        entry = tkm.addEntry()
-        tkm.addButton("Continue", mustReturn=isPopup, callback=tkm.setAsyncResponse, args=entry.get)
-        tkm.run()
-        return tkm.getAsyncResponse()
-
-    def getChoices(self, title, choices, tkManager=None, isPopup=False, callback=None):
-        """
-        Choices: array of choices
-        :return the chosen index
-        """
-        tkm = self.getTkManager(tkManager)
-        tkm.removeAll()
-        if callback is None:
-            callback = tkm.setAsyncResponse
-        tkm.addLabel(title)
-
-        for i in range(len(choices)):
-            tkm.addButton(choices[i], mustReturn=isPopup, callback=callback, args=i)
-        tkm.run()
-        return tkm.getAsyncResponse()
-
-    def getTkManager(self, tkManager):
-        """
-        Get a tkManager instance. If the param is None, return a new TkManager
-        :param tkManager: should contain a tkManager instance.
-        :return: a tkManager
-        """
-        if tkManager:
-            tkm = tkManager
-        else:
-            tkm = TkManager()
-        return tkm
 
     def terminate(self):
         self.mainWindow.destroy()

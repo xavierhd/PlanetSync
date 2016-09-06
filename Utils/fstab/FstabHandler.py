@@ -10,9 +10,6 @@ class Handler(FsOperation):
 
     def __init__(self):
         super().__init__()
-        self.init()
-
-    def init(self):
         self.refreshCurrentData()
 
     def refreshCurrentData(self):

@@ -14,8 +14,7 @@ class TkManager(object):
     def __init__(self, callback=None):
         self.tk = Tk()
         if callback:
-            # Define what to do on window close
-            self.tk.protocol("WM_DELETE_WINDOW", callback)
+            setCallback(callback)
         self.content = []
         self.asyncResponse = None
         self.lock = Lock()
@@ -65,6 +64,10 @@ class TkManager(object):
     ################################
     # Util functions
     ################################
+    def setCallback(self, callback):
+        # Define what to do on window close
+        self.tk.protocol("WM_DELETE_WINDOW", callback)
+
     def lastContent(self):
         return self.content[len(self.content) - 1]
 
