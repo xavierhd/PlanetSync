@@ -1,5 +1,5 @@
 from os.path import expanduser, dirname, abspath
-import re # regex utility
+import re  # regex utility
 from copy import copy
 
 from Utils.FileReader import read, readLine, dump

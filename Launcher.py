@@ -6,11 +6,12 @@
 """
 from pprint import pprint
 
-from UI.EasyMenu import EasyMenu
-import Operation
-
+from Operation.EasyMenu import EasyMenu
 from Operation.ConnectionManager import ConnectionManager
-from Utils.fstab.FstabHandler import Handler as FsHandler
+
+from Utils import SshAgent
+from Utils.fstab import FstabHandler
+from UI import TkManager
 
 
 class PlanetSync(object):
@@ -18,18 +19,24 @@ class PlanetSync(object):
     running = None
 
     def __init__(self):
-        self.gUI = EasyMenu(self.callBack, language="english")
-        self.fstabHandler = FsHandler()
+        self.language = "english"  # Should be inside some config file
+        self.sshAgent = SshAgent()
+        self.fstabHandler = FstabHandler()
+        self.windowManager = TkManager()
+        self.operation = None
         self.run()
         print ("This is the end")
 
     def run(self):
         """
-        Main loop of the program
+        Main loop of the program, was a loop -_-
         """
-        self.running = True
-        while self.running:
-            Operation.EasyMenu(self.fstabHandler, self.gUI, self.callBack)
+        self.operation = EasyMenu(self.windowManager,
+                                  self.sshAgent,
+                                  self.fstabHandler,
+                                  self.callBack,
+                                  self.language)
+        self.operation.run()
 
     def callBack(self, args="quit"):
         """
@@ -37,12 +44,16 @@ class PlanetSync(object):
         """
         if args == "quit":
             self.terminate()
-        if args == "connectionManager":
-            ConnectionManager(self.fstabHandler)
+        elif args == "connectionManager":
+            self.operation = ConnectionManager(self.windowManager,
+                                               self.sshAgent,
+                                               self.fstabHandler,
+                                               self.callBack,
+                                               self.language)
+            self.operation.run()
 
     def terminate(self):
-        self.running = False
-        self.gUI.terminate()
+        self.operation.destroy()
 
 if __name__ == '__main__':
     PlanetSync()

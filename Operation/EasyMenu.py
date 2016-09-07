@@ -1,21 +1,20 @@
-from Utils.SshAgent import SshAgent
 
+from Operation import Operation
+from UI.EasyMenu import EasyMenu as UI_EasyMenu
 
-class EasyMenu(object):
+class EasyMenu(Operation):
 
-    gUI = None
-    sshAgent = None
-    fstabHandler = None
-
-    def __init__(self, fstabHandler, gUI, callback):
-        self.sshAgent = SshAgent()
-        self.fstabHandler = fstabHandler
-        self.gUI = gUI
-        self.gUI.show()
+    def __init__(self, windowManager, sshAgent, fstabHandler, callback, language):
+        super().__init__(callback, sshAgent, fstabHandler)
+        self.gUI = UI_EasyMenu(windowManager, callback, language)
         self.gUI.getChoices(self.gUI.string["menu"]["operation"],
                             self.gUI.string["menu"]["choice"],
                             tkManager=self.gUI.window,
-                            callback=self.callback)
+                            callback=self.callback,
+                            append=True)
+
+    def run(self):
+        self.gUI.run()
 
     def callback(self, choice):
         if choice == 0:
@@ -40,4 +39,7 @@ class EasyMenu(object):
             self.fstabHandler.add(dic)
             self.fstabHandler.save()
         elif choice == 4:
-            self.callback("connectionManager")
+            self.callBack("connectionManager")
+
+    def destroy(self):
+        self.gUI.terminate()

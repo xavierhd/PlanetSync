@@ -1,5 +1,4 @@
 from UI.TkManager import TkManager
-from UI import LangSelector
 from UI.GUI import GUI
 from tkinter import Listbox, END
 
@@ -12,34 +11,28 @@ class ConnectionManager(GUI):
     """
 
     tkm = None
-    window = None
     primaryList = None
     secondaryList = None
 
-    def __init__(self, callBack, language):
-        super().__init__(callBack, language)
-        self.primaryList = self.tkm.addListBox()
-        self.secondaryList = self.tkm.addListBox()
-        self.window = self.show()
+    def __init__(self, windowManager, callback, language):
+        super().__init__(windowManager, callback, language)
+        self.primaryList = self.tkm.addListbox()
+        self.secondaryList = self.tkm.addListbox()
 
     def show(self):
         """
         Init the window
         :return: The window instance
         """
-        if self.window:
-            tkm = self.window
-        else:
-            tkm = TkManager(self.callBack)
-        tkm.addLabel(self.string["connectionManager"]["title"])
-        tkm.addLabel(self.string["connectionManager"]["info"])
-        tkm.addLabel(self.string["connectionManager"]["operation"])
-        return tkm
+        self.window.setCallback(self.callback)
+        self.window.addLabel(self.string["connectionManager"]["title"])
+        self.window.addLabel(self.string["connectionManager"]["info"])
+        self.window.addLabel(self.string["connectionManager"]["operation"])
 
     def setList(self, list, serverList):
-        self.list.delete(0, END)
+        list.delete(0, END)
         for server in serverList:
-            self.list.insert(END, server)
+            list.insert(END, server)
 
     def showAdvanced(self):
         tkm = TkManager()
@@ -51,11 +44,11 @@ class ConnectionManager(GUI):
     def getSshInfo(self):
         return {
             "hostname": self.getInfo(self.string["question"]["get"]["remote_ip"],
-                                     tkManager=self.mainWindow),
+                                     tkManager=self.window),
             "username": self.getInfo(self.string["question"]["get"]["remote_user"],
-                                     tkManager=self.mainWindow),
+                                     tkManager=self.window),
             "password": self.getPassword(self.string["question"]["get"]["remote_pw"],
-                                         tkManager=self.mainWindow)
+                                         tkManager=self.window)
                 }
 
     def sshfsInfoWindow(self, entry=None):
@@ -96,9 +89,3 @@ class ConnectionManager(GUI):
         return {"hostname": entryRemotePath.get(),
                 "username": entryLocalPath.get(),
                 }
-
-    def sshfsInfoWindow(self):
-        tkm = self.getTkManager(None)
-
-    def terminate(self):
-        self.mainWindow.destroy()

@@ -14,7 +14,7 @@ class TkManager(object):
     def __init__(self, callback=None):
         self.tk = Tk()
         if callback:
-            setCallback(callback)
+            self.setCallback(callback)
         self.content = []
         self.asyncResponse = None
         self.lock = Lock()
@@ -40,8 +40,8 @@ class TkManager(object):
         self.lastContent().grid(row=len(self.content))
         return self.lastContent()
 
-    def addListBox(self, actionButtonText=None, callback=None, args=None):
-        self.content.append(ListBox(self.tk))
+    def addListbox(self, actionButtonText=None, callback=None, args=None):
+        self.content.append(Listbox(self.tk))
         self.lastContent().grid(row=len(self.content))
         return self.lastContent()
 
