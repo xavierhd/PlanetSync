@@ -13,8 +13,8 @@ class ConnectionManager(GUI):
     primaryList = None
     secondaryList = None
 
-    def __init__(self, windowManager, callback, language):
-        super().__init__(windowManager, callback, language)
+    def __init__(self, windowManager, callBack, language):
+        super().__init__(windowManager, callBack, language)
 
     def show(self):
         """
@@ -22,7 +22,6 @@ class ConnectionManager(GUI):
         """
         self.window.setWindowTitle(self.string["connectionManager"]["title"])
         self.window.removeAll()
-        self.window.setClosingOperation(self.callback)
         self.window.addLabel(self.string["connectionManager"]["instruction"])
         self.window.addSpacer()
         self.window.addLabel(self.string["connectionManager"]["primaryListTitle"])
@@ -33,12 +32,15 @@ class ConnectionManager(GUI):
         self.secondaryList = self.window.addListbox(
             actionButtonText=self.string["connectionManager"]["buttonSecondaryList"])
         self.window.addSpacer()
-        self.window.addButton(self.string["general"]["buttonBack"], callback=self.callback, args="back")
+        self.window.addButton(self.string["general"]["buttonBack"], callback=self.callBack, args="back")
 
-    def setList(self, list, serverList):
-        list.delete(0, END)
+    def addItem(self, targetListbox, newItem):
+        targetListbox.insert(END, newItem)
+
+    def setList(self, targetListbox, serverList):
+        targetListbox.delete(0, END)
         for server in serverList:
-            list.insert(END, server)
+            targetListbox.insert(END, server)
 
     def showAdvanced(self):
         tkm = TkManager()

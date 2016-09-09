@@ -49,7 +49,6 @@ class PlanetSync(object):
         """
         Function call if some operation need to return control to the basic Launcher
         """
-        import pdb; pdb.set_trace()
         if args == "quit":
             self.terminate()
         elif args == "connectionManager":

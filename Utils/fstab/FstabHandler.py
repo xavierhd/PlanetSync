@@ -12,6 +12,10 @@ class Handler(FsOperation):
         super().__init__()
         self.refreshCurrentData()
 
+    def get(self):
+        """Return the current data of the fstab"""
+        return self.fstab
+
     def refreshCurrentData(self):
         """
         Update the current data with the fstab autogen section

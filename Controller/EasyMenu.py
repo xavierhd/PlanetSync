@@ -8,13 +8,10 @@ class EasyMenu(Controller):
     def __init__(self, controller):
         super().__init__(controller=controller)
         self.gUI = UI_EasyMenu(self.windowManager, self.callback, self.language)
-        self.gUI.getChoices(self.gUI.string["menu"]["operation"],
-                            self.gUI.string["menu"]["choice"],
-                            tkManager=self.gUI.window,
-                            callback=self.callback,
-                            append=True)
 
     def run(self):
+        self.gUI.setClosingOperation(self.callBack)
+        self.gUI.show()
         self.gUI.run()
 
     def callback(self, choice):
@@ -40,4 +37,6 @@ class EasyMenu(Controller):
             self.fstabHandler.add(dic)
             self.fstabHandler.save()
         elif choice == 4:
+            print ("button #5 pressed")
+        elif choice == 5:
             self.callBack("connectionManager")

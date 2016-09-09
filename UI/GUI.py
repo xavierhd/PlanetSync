@@ -8,11 +8,11 @@ class GUI(object):
     """
 
     window = None
-    callback = None
+    callBack = None
     string = None
 
-    def __init__(self, windowManager, callback, language="english"):
-        self.callback = callback
+    def __init__(self, windowManager, callBack, language="english"):
+        self.callBack = callBack
         self.string = LangSelector.getLang(language)
         self.window = windowManager
 
@@ -60,7 +60,7 @@ class GUI(object):
 
         for i in range(len(choices)):
             tkm.addButton(choices[i], mustReturn=isPopup, callback=callback, args=i)
-        if tkManager:
+        if tkManager is None:
             tkm.run()
         return tkm.getAsyncResponse()
 
@@ -76,11 +76,10 @@ class GUI(object):
             tkm = TkManager()
         return tkm
 
-    def setCallback(self, callback):
+    def setClosingOperation(self, callback):
         self.window.setClosingOperation(callback)
 
     def run(self):
-        self.show()
         self.window.run()
 
     def terminate(self):
