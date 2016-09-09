@@ -2,8 +2,6 @@ from UI.GUI import GUI
 
 class EasyMenu(GUI):
 
-    sta = 0
-
     def __init__(self, windowManager, callBack, language):
         super().__init__(windowManager, callBack, language)
 
@@ -12,9 +10,8 @@ class EasyMenu(GUI):
         """
         Init the menu
         """
-        EasyMenu.sta += 1
-        print (EasyMenu.sta)
-        self.window.addLabel(self.string["menu"]["title"])
+        self.window.setWindowTitle(self.string["menu"]["title"])
+        self.window.removeAll()
         self.window.addLabel(self.string["menu"]["info"])
 
     def getSshInfo(self):

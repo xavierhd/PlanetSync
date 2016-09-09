@@ -5,29 +5,35 @@ from tkinter import Listbox, END
 
 class ConnectionManager(GUI):
     """
-    Interface ayant une liste sélectionnable de serveur.
-    Chaque item cliqué affiche la liste des partages associés dans une liste secondaire.
-    Un "Double clique?"/"Bouton à droite" sur un item de l'inteface permet de modifier ces informations.
+    Interface having a clickable list of server.
+    Each clicked item show in a second list the associated share.
+    A double click/Right click any item open an edition window to change related parameter.
     """
 
-    tkm = None
     primaryList = None
     secondaryList = None
 
     def __init__(self, windowManager, callback, language):
         super().__init__(windowManager, callback, language)
-        self.primaryList = self.tkm.addListbox()
-        self.secondaryList = self.tkm.addListbox()
 
     def show(self):
         """
         Init the window
-        :return: The window instance
         """
-        self.window.setCallback(self.callback)
-        self.window.addLabel(self.string["connectionManager"]["title"])
-        self.window.addLabel(self.string["connectionManager"]["info"])
-        self.window.addLabel(self.string["connectionManager"]["operation"])
+        self.window.setWindowTitle(self.string["connectionManager"]["title"])
+        self.window.removeAll()
+        self.window.setClosingOperation(self.callback)
+        self.window.addLabel(self.string["connectionManager"]["instruction"])
+        self.window.addSpacer()
+        self.window.addLabel(self.string["connectionManager"]["primaryListTitle"])
+        self.primaryList = self.window.addListbox(
+            actionButtonText=self.string["connectionManager"]["buttonPrimaryList"])
+        self.window.addSpacer()
+        self.window.addLabel(self.string["connectionManager"]["secondaryListTitle"])
+        self.secondaryList = self.window.addListbox(
+            actionButtonText=self.string["connectionManager"]["buttonSecondaryList"])
+        self.window.addSpacer()
+        self.window.addButton(self.string["general"]["buttonBack"], callback=self.callback, args="back")
 
     def setList(self, list, serverList):
         list.delete(0, END)

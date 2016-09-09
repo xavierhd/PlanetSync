@@ -12,14 +12,12 @@ class GUI(object):
     string = None
 
     def __init__(self, windowManager, callback, language="english"):
-        self.tkm = windowManager
         self.callback = callback
         self.string = LangSelector.getLang(language)
         self.window = windowManager
-        self.show()
 
     def show(self):
-        raise TypeError('abstract method must be overridden')
+        raise NotImplementedError('abstract method must be overridden')
 
     def info(self, msg, tkManager=None, isPopup=True):
         tkm = self.getTkManager(tkManager)
@@ -79,10 +77,11 @@ class GUI(object):
         return tkm
 
     def setCallback(self, callback):
-        self.tkm.setCallback(callback)
+        self.window.setClosingOperation(callback)
 
     def run(self):
-        self.tkm.run()
+        self.show()
+        self.window.run()
 
     def terminate(self):
         self.window.destroy()

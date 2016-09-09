@@ -2,13 +2,8 @@
 
 from Utils import FileReader
 
-lang = None
 
-def getLang(language=None):
-    if not language and lang:
-        language = lang
+def getLang(language):
     if language:
         langfile = "./Locale/{0}.yaml".format(language)
         return FileReader.readYaml(langfile)
-    else:
-        raise Exception("No language selected")

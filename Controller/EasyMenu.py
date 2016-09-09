@@ -1,12 +1,13 @@
 
-from Operation import Operation
+from Controller import Controller
 from UI.EasyMenu import EasyMenu as UI_EasyMenu
 
-class EasyMenu(Operation):
+class EasyMenu(Controller):
+    """Operate the UI named EasyMenu"""
 
-    def __init__(self, windowManager, sshAgent, fstabHandler, callback, language):
-        super().__init__(callback, sshAgent, fstabHandler)
-        self.gUI = UI_EasyMenu(windowManager, callback, language)
+    def __init__(self, controller):
+        super().__init__(controller=controller)
+        self.gUI = UI_EasyMenu(self.windowManager, self.callback, self.language)
         self.gUI.getChoices(self.gUI.string["menu"]["operation"],
                             self.gUI.string["menu"]["choice"],
                             tkManager=self.gUI.window,
@@ -40,6 +41,3 @@ class EasyMenu(Operation):
             self.fstabHandler.save()
         elif choice == 4:
             self.callBack("connectionManager")
-
-    def destroy(self):
-        self.gUI.terminate()

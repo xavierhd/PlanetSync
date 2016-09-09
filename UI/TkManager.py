@@ -14,7 +14,7 @@ class TkManager(object):
     def __init__(self, callback=None):
         self.tk = Tk()
         if callback:
-            self.setCallback(callback)
+            self.setClosingOperation(callback)
         self.content = []
         self.asyncResponse = None
         self.lock = Lock()
@@ -26,6 +26,10 @@ class TkManager(object):
         for item in self.content:
             item.grid_forget()
         self.content = []
+
+    def addSpacer(self):
+        self.content.append(Label(self.tk, text=" "))
+        self.lastContent().grid(row=len(self.content))
 
     def addLabel(self, text):
         self.content.append(Label(self.tk, text=text))
@@ -43,6 +47,9 @@ class TkManager(object):
     def addListbox(self, actionButtonText=None, callback=None, args=None):
         self.content.append(Listbox(self.tk))
         self.lastContent().grid(row=len(self.content))
+        if actionButtonText:
+            self.content.append(Button(self.tk, text=actionButtonText))
+            self.lastContent().grid(row=len(self.content)-1, column=1)
         return self.lastContent()
 
     def addButton(self, text, mustReturn=False, callback=None, args=None):
@@ -54,9 +61,12 @@ class TkManager(object):
         :param args: The argument to give to the callback
         :return: The button instance
         """
+
+        # Method to call when clicked
         action = [callback, self.destroy if mustReturn else self.quit]
         args = [args, None]
         onClick = self.makeLambda(action, args)
+
         self.content.append(Button(self.tk, text=text, command=onClick))
         self.lastContent().grid(row=len(self.content), sticky=W, pady=4)
         return self.lastContent()
@@ -64,9 +74,12 @@ class TkManager(object):
     ################################
     # Util functions
     ################################
-    def setCallback(self, callback):
+    def setClosingOperation(self, callback):
         # Define what to do on window close
         self.tk.protocol("WM_DELETE_WINDOW", callback)
+
+    def setWindowTitle(self, title):
+        self.tk.wm_title(title)
 
     def lastContent(self):
         return self.content[len(self.content) - 1]
@@ -81,10 +94,11 @@ class TkManager(object):
 
     def superLambda(self, actions, args):
         """
-        Pack any function inside a lambda call
+        Pack any function and it args inside a lambda call
         :param actions: a list of function
         :param args: a list of args to be passed to the function
         """
+        # import pdb; pdb.set_trace()
         for i in range(len(actions)):
             if actions[i] is not None:
                 if args is not None \
@@ -105,7 +119,7 @@ class TkManager(object):
         try:
             self.asyncResponse = args()
         except TypeError:
-            #args is definitely not a function
+            # args is definitely not a function
             self.asyncResponse = args
         self.lock.release()
 

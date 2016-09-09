@@ -6,8 +6,9 @@
 """
 from pprint import pprint
 
-from Operation.EasyMenu import EasyMenu
-from Operation.ConnectionManager import ConnectionManager
+from Controller import Controller
+from Controller.EasyMenu import EasyMenu
+from Controller.ConnectionManager import ConnectionManager
 
 from Utils import SshAgent
 from Utils.fstab import FstabHandler
@@ -20,10 +21,9 @@ class PlanetSync(object):
 
     def __init__(self):
         self.language = "english"  # Should be inside some config file
-        self.sshAgent = SshAgent()
-        self.fstabHandler = FstabHandler()
-        self.windowManager = TkManager()
-        self.operation = None
+        self.controller = Controller(TkManager(), SshAgent(), FstabHandler(), self.callback)
+        self.controller.setLanguage(self.language)
+        self.controllerList = []
         self.run()
         print ("This is the end")
 
@@ -31,29 +31,34 @@ class PlanetSync(object):
         """
         Main loop of the program, was a loop -_-
         """
-        self.operation = EasyMenu(self.windowManager,
-                                  self.sshAgent,
-                                  self.fstabHandler,
-                                  self.callBack,
-                                  self.language)
-        self.operation.run()
+        self.startEasyMenu()
 
-    def callBack(self, args="quit"):
+    def startEasyMenu(self):
+        self.controllerList.append(EasyMenu(self.controller))
+        self.controllerList[-1].run()
+
+    def startConnectionManager(self):
+        self.controllerList.append(ConnectionManager(self.controller))
+        self.controllerList[-1].run()
+
+    def launchPrevious(self):
+        self.controllerList.pop()
+        self.controllerList[-1].run()
+
+    def callback(self, args="quit"):
         """
         Function call if some operation need to return control to the basic Launcher
         """
+        import pdb; pdb.set_trace()
         if args == "quit":
             self.terminate()
         elif args == "connectionManager":
-            self.operation = ConnectionManager(self.windowManager,
-                                               self.sshAgent,
-                                               self.fstabHandler,
-                                               self.callBack,
-                                               self.language)
-            self.operation.run()
+            self.startConnectionManager()
+        elif args == "back":
+            self.launchPrevious()
 
     def terminate(self):
-        self.operation.destroy()
+        self.controller.destroy()
 
 if __name__ == '__main__':
     PlanetSync()

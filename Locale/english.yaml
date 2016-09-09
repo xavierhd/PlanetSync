@@ -8,6 +8,13 @@ menu:
         2: Mount a folder "forever"
         3: Unmount a folder
         4: Remove a folder mounted "forever"
+connectionManager:
+    title: PlanetSync - Connection Manager
+    instruction: Click on an item of the list to extend associated info
+    primaryListTitle: Server list
+    buttonPrimaryList: Add a connection
+    secondaryListTitle: Share list of the selected server
+    buttonSecondaryList: Add a share
 advanced:
     title: Advanced menu
     info: Manage your static connection (Directory mounted "forever")
@@ -26,3 +33,5 @@ question:
         remote_pw: What is the remote user password?
         local_path: What is the local mounting directory path? (The directory must be  empty)
         share_name: What is the share name?
+general:
+    buttonBack: Back
