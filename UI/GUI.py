@@ -8,61 +8,88 @@ class GUI(object):
     """
 
     window = None
-    callback = None
+    callBack = None
     string = None
 
-    def __init__(self, windowManager, callback, language="english"):
-        self.callback = callback
+    def __init__(self, windowManager, callBack, language="english"):
+        """
+        :param windowManager: An instance of TkManager
+        :param callBack: A function to be bind button to
+        :param language: The language to use, TODO: Deprecate this
+        """
+        self.callBack = callBack
         self.string = LangSelector.getLang(language)
         self.window = windowManager
 
     def show(self):
         raise NotImplementedError('abstract method must be overridden')
 
-    def info(self, msg, tkManager=None, isPopup=True):
+    def info(self, text, tkManager=None):
+        """
+        :param text: The text to display
+        :param tkManager: An instance of TkManager. If no manager is given, a the info will be displayed as a popup
+        """
         tkm = self.getTkManager(tkManager)
-        tkm.addLabel(msg)
-        if tkm is not self.window:
-            tkm.addButton("Understood!", mustReturn=isPopup)
-        if isPopup:
+        tkm.addLabel(text)
+        if not tkManager:
+            tkm.addButton("Understood!", mustReturn=True, callBack=tkm.quit())
             tkm.run()
 
-    def getPassword(self, msg='Enter your password', tkManager=None, isPopup=False):
+    def getPassword(self, text='Enter your password', tkManager=None):
+        """
+        Show an obfuscated entrybox to let user input password
+        :param text: The text to display as a hint over the password field
+        :param tkManager: An instance of TkManager. If no manager, a popup is used instead
+        :return: The password field / Popup: The password input by the user
+        """
         tkm = self.getTkManager(tkManager)
         tkm.removeAll()
-        tkm.addLabel(msg)
+        tkm.addLabel(text)
         entry = tkm.addEntry(isPassword=True)
-        tkm.addButton("Continue", mustReturn=isPopup, callback=tkm.setAsyncResponse, args=entry.get)
-        tkm.run()
-        return tkm.getAsyncResponse()
+        if not tkManager:
+            tkm.addButton("Continue", mustReturn=True, callBack=tkm.setAsyncResponse, args=entry.get)
+            tkm.run()
+            return tkm.getAsyncResponse()
+        else:
+            return entry
 
-    def getInfo(self, msg, tkManager=None, isPopup=False):
+    def getInfo(self, text, tkManager=None):
+        """
+        Show an entrybox to let the user input information
+        :param text: The text to display as a hint over the info field
+        :param tkManager: An instance of TkManager. If no manager, a popup is used instead
+        :return: The info field / Popup: The info input by the user
+        """
         tkm = self.getTkManager(tkManager)
         tkm.removeAll()
-        tkm.addLabel(msg)
+        tkm.addLabel(text)
         entry = tkm.addEntry()
-        tkm.addButton("Continue", mustReturn=isPopup, callback=tkm.setAsyncResponse, args=entry.get)
-        tkm.run()
-        return tkm.getAsyncResponse()
+        if not tkManager:
+            tkm.addButton("Continue", mustReturn=True, callBack=tkm.setAsyncResponse, args=entry.get)
+            tkm.run()
+            return tkm.getAsyncResponse()
+        else:
+            return entry
 
-    def getChoices(self, title, choices, tkManager=None, isPopup=False, callback=None, append=None):
+    def getChoices(self, title, choices, tkManager=None, callBack=None, append=None):
         """
         Show a list of button choice to the user
         :param choices: array of choices
-        :return the chosen index
+        :return: The index of the clicked button
         """
+        isPopup = True if tkManager else False
         tkm = self.getTkManager(tkManager)
         if not append:
             tkm.removeAll()
-        if callback is None:
-            callback = tkm.setAsyncResponse
-        tkm.addLabel(title)
+        if not callBack:
+            callBack = self.setAsyncResponse
 
+        tkm.addLabel(title)
         for i in range(len(choices)):
-            tkm.addButton(choices[i], mustReturn=isPopup, callback=callback, args=i)
-        if tkManager:
+            tkm.addButton(choices[i], mustReturn=isPopup, callBack=callBack, args=i)
+        if not tkManager:
             tkm.run()
-        return tkm.getAsyncResponse()
+            return tkm.getAsyncResponse()
 
     def getTkManager(self, tkManager=None):
         """
@@ -77,11 +104,20 @@ class GUI(object):
         return tkm
 
     def setCallback(self, callback):
+        """
+        Set the callback for closing operation
+        """
         self.window.setClosingOperation(callback)
 
     def run(self):
+        """
+        Init the window component and run the UI main loop
+        """
         self.show()
         self.window.run()
 
     def terminate(self):
+        """
+        Put an end to all this crazyness
+        """
         self.window.destroy()

@@ -18,7 +18,7 @@ class ConnectionManager(GUI):
 
     def show(self):
         """
-        Init the window
+        Init the window component
         """
         self.window.setWindowTitle(self.string["connectionManager"]["title"])
         self.window.removeAll()
@@ -36,6 +36,11 @@ class ConnectionManager(GUI):
         self.window.addButton(self.string["general"]["buttonBack"], callback=self.callback, args="back")
 
     def setList(self, list, serverList):
+        """
+        Set the provided list with the content of the provided serverList
+        :param list: The listbox instance to be setted
+        :param serverList: An array of new values
+        """
         list.delete(0, END)
         for server in serverList:
             list.insert(END, server)

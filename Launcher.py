@@ -16,13 +16,17 @@ from UI import TkManager
 
 
 class PlanetSync(object):
+    """
+    The main class which manage window controller
+    """
 
     running = None
 
     def __init__(self):
-        self.language = "english"  # Should be inside some config file
+        self.language = "english"  # TODO: Should be inside some config file
         self.controller = Controller(TkManager(), SshAgent(), FstabHandler(), self.callback)
         self.controller.setLanguage(self.language)
+        # This list contain all the class extending Controller
         self.controllerList = []
         self.run()
         print ("This is the end")
@@ -52,12 +56,18 @@ class PlanetSync(object):
         import pdb; pdb.set_trace()
         if args == "quit":
             self.terminate()
+        # Tell the program that the connectionManager need to be launched
         elif args == "connectionManager":
             self.startConnectionManager()
+        # Tell the program that the current window has finish it operation.
+        # The previous window is shown
         elif args == "back":
             self.launchPrevious()
 
     def terminate(self):
+        """
+        End the application
+        """
         self.controller.destroy()
 
 if __name__ == '__main__':

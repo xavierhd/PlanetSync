@@ -1,6 +1,9 @@
 from UI.GUI import GUI
 
 class EasyMenu(GUI):
+    """
+    Easy to use interface for beginner
+    """
 
     def __init__(self, windowManager, callBack, language):
         super().__init__(windowManager, callBack, language)
@@ -8,7 +11,7 @@ class EasyMenu(GUI):
 
     def show(self):
         """
-        Init the menu
+        Init the menu UI component
         """
         self.window.setWindowTitle(self.string["menu"]["title"])
         self.window.removeAll()

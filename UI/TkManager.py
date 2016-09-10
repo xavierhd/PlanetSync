@@ -63,7 +63,7 @@ class TkManager(object):
         """
 
         # Method to call when clicked
-        action = [callback, self.destroy if mustReturn else self.quit]
+        action = [callback, self.quit if mustReturn else None]
         args = [args, None]
         onClick = self.makeLambda(action, args)
 
