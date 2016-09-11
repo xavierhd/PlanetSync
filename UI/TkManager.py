@@ -20,23 +20,41 @@ class TkManager(object):
         self.lock = Lock()
 
     def run(self):
+        """
+        Launch the UI mainloop
+        """
         self.tk.mainloop()
 
     def removeAll(self):
+        """
+        Delete the all the component from the window
+        """
         for item in self.content:
             item.grid_forget()
         self.content = []
 
     def addSpacer(self):
+        """
+        Add a spacer in the window
+        """
         self.content.append(Label(self.tk, text=" "))
         self.lastContent().grid(row=len(self.content))
 
     def addLabel(self, text):
+        """
+        Add a label to the window
+        :param text: The text to display on the label
+        """
         self.content.append(Label(self.tk, text=text))
         self.lastContent().grid(row=len(self.content))
         return self.lastContent()
 
     def addEntry(self, isPassword=False):
+        """
+        Add an entry field
+        :param isPassword: True to obfuscate the entry field
+        :return: the created entry
+        """
         if isPassword:
             self.content.append(Entry(self.tk, show="*"))
         else:
@@ -45,6 +63,13 @@ class TkManager(object):
         return self.lastContent()
 
     def addListbox(self, actionButtonText=None, callback=None, args=None):
+        """
+        Add a listbox
+        :param actionButtonText: The text to show in the button, if no text is provided, no button is shown
+        :param callback: A function executed on button press
+        :param args: The argument to give to the callback
+        :return: the created listbox
+        """
         self.content.append(Listbox(self.tk))
         self.lastContent().grid(row=len(self.content))
         if actionButtonText:
@@ -59,7 +84,7 @@ class TkManager(object):
         :param mustReturn: True to destroy the window, False to only return control to the caller
         :param callback: A function executed on button press
         :param args: The argument to give to the callback
-        :return: The button instance
+        :return: The created button
         """
 
         # Method to call when clicked
@@ -75,20 +100,27 @@ class TkManager(object):
     # Util functions
     ################################
     def setClosingOperation(self, callback):
-        # Define what to do on window close
+        # Define what to do when the window close
         self.tk.protocol("WM_DELETE_WINDOW", callback)
 
     def setWindowTitle(self, title):
+        """
+        Change the window bar text
+        :param title: The text to be set
+        """
         self.tk.wm_title(title)
 
     def lastContent(self):
-        return self.content[len(self.content) - 1]
+        """
+        :return: The last added content
+        """
+        return self.content[-1]
 
     def makeLambda(self, actions, args=None):
         """
         Build a lambda expression
-        :param actions: function list
-        :param args: actions' args list
+        :param actions: a list of function
+        :param args: a list of args to feed each functions call
         """
         return lambda: self.superLambda(actions, args)
 
@@ -98,9 +130,10 @@ class TkManager(object):
         :param actions: a list of function
         :param args: a list of args to be passed to the function
         """
-        # import pdb; pdb.set_trace()
         for i in range(len(actions)):
+            # If the action exist
             if actions[i] is not None:
+                # If the action have a corresponding function
                 if args is not None \
                         and i < len(args) \
                         and args[i] is not None:
@@ -109,12 +142,21 @@ class TkManager(object):
                     actions[i]()
 
     def destroy(self):
+        """
+        Destroy the window instance
+        """
         self.tk.destroy()
 
     def quit(self):
+        """
+        Stop the main loop
+        """
         self.tk.quit()
 
     def setAsyncResponse(self, args=None):
+        """
+        Use this to save some function return value and access it later
+        """
         self.lock.acquire()
         try:
             self.asyncResponse = args()
@@ -124,6 +166,9 @@ class TkManager(object):
         self.lock.release()
 
     def getAsyncResponse(self):
+        """
+        Access the saved response from the set caller previously
+        """
         self.lock.acquire()
         val = self.asyncResponse
         self.asyncResponse = None

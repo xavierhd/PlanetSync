@@ -9,6 +9,16 @@ class Controller(object):
     language = "english"  # Default value
 
     def __init__(self, windowManager=None, sshAgent=None, fstabHandler=None, callBack=None, controller=None):
+        """
+        This class can be instanciated using two methods:
+        1: Provide all arguments, but the last
+        2: Provide the last argument
+        :param windowManager: The window manager to use
+        :param sshAgent: The instance of the SshAgent
+        :param fstabHandler: The instance of the FstabHandler
+        :param callBack: A function to be used to give information about the running process
+        :param controller: And instance of a Controller of any class extending Controller, used to make a copy of the already built Controller
+        """
         if(controller):
             self.windowManager = controller.windowManager
             self.sshAgent = controller.sshAgent
@@ -40,5 +50,8 @@ class Controller(object):
 
     """abstract"""
     def callback(self, args):
-        """The function called by """
+        """
+        The function used to be notified by window event
+        :param args: information about why the function has been call and to help to dispatch
+        """
         raise NotImplementedError("abstract method must be overridden")

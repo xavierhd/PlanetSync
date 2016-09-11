@@ -14,9 +14,11 @@ class EasyMenu(Controller):
                             callback=self.callback,
                             append=True)
 
+    """Override Controller.run"""
     def run(self):
         self.gUI.run()
 
+    """Override Controller.callback"""
     def callback(self, choice):
         if choice == 0:
             info = self.gUI.getSshfsInfo()

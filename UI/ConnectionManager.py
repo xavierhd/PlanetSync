@@ -10,12 +10,14 @@ class ConnectionManager(GUI):
     A double click/Right click any item open an edition window to change related parameter.
     """
 
+    # Watchout, these are not the UI element, but the content of those
     primaryList = None
     secondaryList = None
 
     def __init__(self, windowManager, callback, language):
         super().__init__(windowManager, callback, language)
 
+    """Override GUI.show"""
     def show(self):
         """
         Init the window component

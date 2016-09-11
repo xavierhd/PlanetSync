@@ -8,7 +8,7 @@ class EasyMenu(GUI):
     def __init__(self, windowManager, callBack, language):
         super().__init__(windowManager, callBack, language)
 
-
+    """Override GUI.show"""
     def show(self):
         """
         Init the menu UI component
@@ -18,6 +18,10 @@ class EasyMenu(GUI):
         self.window.addLabel(self.string["menu"]["info"])
 
     def getSshInfo(self):
+        """
+        Show multiple popup window just like an install wizard,
+        asking for mandatory information to make an ssh connection
+        """
         return {
             "hostname": self.getInfo(self.string["question"]["get"]["remote_ip"],
                                      tkManager=self.window),
@@ -28,6 +32,10 @@ class EasyMenu(GUI):
                 }
 
     def getSshfsInfo(self):
+        """
+        Show multiple popup windows just like an install wizard,
+        asking for mandatory information to make an sshfs connection
+        """
         info = self.getSshInfo()
         info["remotePath"] = self.getInfo(self.string["question"]["get"]["remote_path"],
                                           tkManager=self.window)

@@ -17,7 +17,7 @@ from UI import TkManager
 
 class PlanetSync(object):
     """
-    The main class which manage window controller
+    The main class which manage the windows controller
     """
 
     running = None
