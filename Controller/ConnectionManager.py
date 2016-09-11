@@ -19,6 +19,9 @@ class ConnectionManager(Controller):
 
     """Override Controller.run"""
     def run(self):
+        self.gUI.setClosingOperation(self.callBack)
+        self.gUI.show()
+        self.setListBox(self.gUI.primaryList, self.fstabHandler.get())
         self.gUI.run()
 
     def setListBox(self, listBox, serverList):
@@ -27,6 +30,7 @@ class ConnectionManager(Controller):
         :param listBox: The listBox to be modified
         :param serverList: An array of server to be displayed in the listBox
         """
+        serverList = self.fstabHandler.getServerList()
         self.gUI.setList(listBox, serverList)
 
     def addToList(self, listBox, newItem):
@@ -35,12 +39,12 @@ class ConnectionManager(Controller):
         :param listBox: The listbox to be modified
         :param newItem: The element to add to the listbox
         """
-        listBox.insert(END, newItem)
+        self.gUI.addToList(listBox, newItem)
 
     """Override Controller.callback"""
     def callback(self, args):
         if args == "back":
-            self.callBack()
+            self.callBack("back")
         if args is self.primaryList:
             self.setListBox(self.gUI.secondaryList, args)
         elif args is self.secondaryList:

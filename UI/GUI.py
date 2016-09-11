@@ -103,9 +103,10 @@ class GUI(object):
             tkm = TkManager()
         return tkm
 
-    def setCallback(self, callback):
+    def setClosingOperation(self, callback):
         """
         Set the callback for closing operation
+        :param callback: A function to call when the window is closed
         """
         self.window.setClosingOperation(callback)
 
@@ -113,7 +114,6 @@ class GUI(object):
         """
         Init the window component and run the UI main loop
         """
-        self.show()
         self.window.run()
 
     def terminate(self):

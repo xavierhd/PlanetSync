@@ -16,6 +16,11 @@ class EasyMenu(GUI):
         self.window.setWindowTitle(self.string["menu"]["title"])
         self.window.removeAll()
         self.window.addLabel(self.string["menu"]["info"])
+        self.getChoices(self.string["menu"]["operation"],
+                            self.string["menu"]["choice"],
+                            tkManager=self.window,
+                            callback=self.callBack,
+                            append=True)
 
     def getSshInfo(self):
         """

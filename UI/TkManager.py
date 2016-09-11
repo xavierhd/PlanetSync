@@ -71,11 +71,12 @@ class TkManager(object):
         :return: the created listbox
         """
         self.content.append(Listbox(self.tk))
-        self.lastContent().grid(row=len(self.content))
+        listbox = self.lastContent()
+        listbox.grid(row=len(self.content))
         if actionButtonText:
             self.content.append(Button(self.tk, text=actionButtonText))
             self.lastContent().grid(row=len(self.content)-1, column=1)
-        return self.lastContent()
+        return listbox
 
     def addButton(self, text, mustReturn=False, callback=None, args=None):
         """

@@ -8,6 +8,7 @@ menu:
         2: Mount a folder "forever"
         3: Unmount a folder
         4: Remove a folder mounted "forever"
+        5: Connection Manager
 connectionManager:
     title: PlanetSync - Connection Manager
     instruction: Click on an item of the list to extend associated info
