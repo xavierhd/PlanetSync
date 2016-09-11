@@ -37,6 +37,7 @@ class ConnectionManager(Controller):
         """
         listBox.insert(END, newItem)
 
+    """Override Controller.callback"""
     def callback(self, args):
         if args == "back":
             self.callBack()

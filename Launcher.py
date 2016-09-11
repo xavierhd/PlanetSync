@@ -46,6 +46,9 @@ class PlanetSync(object):
         self.controllerList[-1].run()
 
     def launchPrevious(self):
+        """
+        Re-Launch the previously running controller
+        """
         self.controllerList.pop()
         self.controllerList[-1].run()
 
