@@ -62,7 +62,7 @@ class TkManager(object):
         self.lastContent().grid(row=len(self.content))
         return self.lastContent()
 
-    def addListbox(self, actionButtonText=None, callBack=None, args=None):
+    def addListbox(self, button=None, callBack=None, args=None):
         """
         Add a listbox
         :param actionButtonText: The text to show in the button, if no text is provided, no button is shown
@@ -70,11 +70,11 @@ class TkManager(object):
         :param args: The argument to give to the callback
         :return: the created listbox
         """
-        self.content.append(Listbox(self.tk))
-        listbox = self.lastContent()
+        listbox = Listbox(self.tk)
+        self.content.append(listbox)
         listbox.grid(row=len(self.content))
-        if actionButtonText:
-            self.content.append(Button(self.tk, text=actionButtonText))
+        if button:
+            self.content.append(button)
             self.lastContent().grid(row=len(self.content)-1, column=1)
         return listbox
 

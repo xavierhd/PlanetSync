@@ -14,7 +14,7 @@ class GUI(object):
     def __init__(self, windowManager, callBack, language="english"):
         """
         :param windowManager: An instance of TkManager
-        :param callBack: A function to be bind button to
+        :param callBack: A function to bind button to
         :param language: The language to use, TODO: Deprecate this
         """
         self.callBack = callBack
@@ -46,12 +46,9 @@ class GUI(object):
         tkm.removeAll()
         tkm.addLabel(text)
         entry = tkm.addEntry(isPassword=True)
-        if not tkManager:
-            tkm.addButton("Continue", mustReturn=True, callBack=tkm.setAsyncResponse, args=entry.get)
-            tkm.run()
-            return tkm.getAsyncResponse()
-        else:
-            return entry
+        tkm.addButton("Continue", mustReturn=True, callBack=tkm.setAsyncResponse, args=entry.get)
+        tkm.run()
+        return tkm.getAsyncResponse()
 
     def getInfo(self, text, tkManager=None):
         """
@@ -64,12 +61,9 @@ class GUI(object):
         tkm.removeAll()
         tkm.addLabel(text)
         entry = tkm.addEntry()
-        if not tkManager:
-            tkm.addButton("Continue", mustReturn=True, callBack=tkm.setAsyncResponse, args=entry.get)
-            tkm.run()
-            return tkm.getAsyncResponse()
-        else:
-            return entry
+        tkm.addButton("Continue", mustReturn=True, callBack=tkm.setAsyncResponse, args=entry.get)
+        tkm.run()
+        return tkm.getAsyncResponse()
 
     def getChoices(self, title, choices, tkManager=None, callBack=None, append=None):
         """

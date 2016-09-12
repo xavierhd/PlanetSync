@@ -1,6 +1,6 @@
 from UI.TkManager import TkManager
 from UI.GUI import GUI
-from tkinter import Listbox, END
+from tkinter import Listbox, Button, END
 
 
 class ConnectionManager(GUI):
@@ -26,13 +26,16 @@ class ConnectionManager(GUI):
         self.window.removeAll()
         self.window.addLabel(self.string["connectionManager"]["instruction"])
         self.window.addSpacer()
+
         self.window.addLabel(self.string["connectionManager"]["primaryListTitle"])
-        self.primaryList = self.window.addListbox(
-            actionButtonText=self.string["connectionManager"]["buttonPrimaryList"])
+        self.primaryList = self.window.addListbox()
         self.window.addSpacer()
+
         self.window.addLabel(self.string["connectionManager"]["secondaryListTitle"])
-        self.secondaryList = self.window.addListbox(
-            actionButtonText=self.string["connectionManager"]["buttonSecondaryList"])
+        buttonSecondaryList = Button(self.window.tk,
+            text=self.string["connectionManager"]["buttonSecondaryList"],
+            command=self.window.makeLambda(self.callBack, "addShare"))
+        self.secondaryList = self.window.addListbox(buttonSecondaryList)
         self.window.addSpacer()
         self.window.addButton(self.string["general"]["buttonBack"], callBack=self.callBack, args="back")
 

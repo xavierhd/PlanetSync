@@ -1,6 +1,7 @@
 
 from Controller import Controller
-from UI.ConnectionManager import ConnectionManager as UI_ConnectionManager
+from UI import ConnectionManager as UI_ConnectionManager
+from UI.InfoQuery import InfoQuery
 
 class ConnectionManager(Controller):
     """Control the UI.ConnectionManager"""
@@ -35,11 +36,16 @@ class ConnectionManager(Controller):
         """
         self.gUI.addToList(listBox, newItem)
 
+    def addShare(self):
+        import pdb; pdb.set_trace()
+        iq = InfoQuery(self.language)
+        serverInfo = iq.getShareInfo()
+        # serverInfo == {shareName, username, hostname, remotePath, localPath}
+        self.fstabHandler.add(serverInfo)
+
     """Override Controller.callback"""
     def callback(self, args):
         if args == "back":
             self.callBack("back")
-        if args is self.primaryList:
-            self.setListBox(self.gUI.secondaryList, args)
-        elif args is self.secondaryList:
+        elif args == "addShare":
             self.setListBox(self.gUI.primaryList, args)

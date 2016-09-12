@@ -26,8 +26,7 @@ class Handler(FsOperation):
     def add(self, info):
         """
         Add a drive to the fstab
-        :param info: A dictionnary containing
-        [shareName, username, hostname, remotePath, localPath]
+        :param info: A dictionnary containing {shareName, username, hostname, remotePath, localPath}
         """
         # TODO: Check if info is already inside
         # Right now the defaut is to overwrite any shared drive having the same name as another

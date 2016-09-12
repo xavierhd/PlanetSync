@@ -1,6 +1,6 @@
 
 from Controller import Controller
-from UI.EasyMenu import EasyMenu as UI_EasyMenu
+from UI import EasyMenu as UI_EasyMenu
 
 class EasyMenu(Controller):
     """Operate the UI named EasyMenu"""
