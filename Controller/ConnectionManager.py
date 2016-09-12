@@ -16,7 +16,7 @@ class ConnectionManager(Controller):
     def run(self):
         self.gUI.setClosingOperation(self.callBack)
         self.gUI.show()
-        self.setListBox(self.gUI.primaryList, self.fstabHandler.get())
+        self.setListBox(self.gUI.primaryList, self.fstabHandler.getServerList())
         self.gUI.run()
 
     def setListBox(self, listBox, serverList):
@@ -25,7 +25,6 @@ class ConnectionManager(Controller):
         :param listBox: The listBox to be modified
         :param serverList: An array of server to be displayed in the listBox
         """
-        serverList = self.fstabHandler.getServerList()
         self.gUI.setList(listBox, serverList)
 
     def addToList(self, listBox, newItem):

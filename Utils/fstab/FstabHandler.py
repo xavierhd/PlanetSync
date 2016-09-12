@@ -12,9 +12,10 @@ class Handler(FsOperation):
         super().__init__()
         self.refreshCurrentData()
 
-    def get(self):
-        """Return the current data of the fstab"""
-        return self.fstab
+    def getServerList(self):
+        """Return the current server listed inside the autogen section"""
+        serverList = [key for key in self.fstab.data]
+        return serverList
 
     def refreshCurrentData(self):
         """
