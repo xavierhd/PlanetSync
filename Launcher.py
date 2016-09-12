@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-    PlanetSync
-    The SSH Directory Mounter
-    Create an ssh file share with your home's dynamic IP server
+PlanetSync
+The SSH Directory Mounter
+Create an ssh file share with your home's dynamic IP server
 """
 from pprint import pprint
 

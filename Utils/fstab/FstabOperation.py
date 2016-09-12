@@ -121,7 +121,7 @@ class Operation(object):
         """
         lineFeed = "\n"
         autogenString = self.headTemplate + lineFeed
-        
+
         for key in autogenDict:
             autogenString += self.entryTemplate.format(shareName=key, **autogenDict[key])
 

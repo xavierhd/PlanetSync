@@ -34,7 +34,7 @@ class ConnectionManager(GUI):
         self.secondaryList = self.window.addListbox(
             actionButtonText=self.string["connectionManager"]["buttonSecondaryList"])
         self.window.addSpacer()
-        self.window.addButton(self.string["general"]["buttonBack"], callback=self.callBack, args="back")
+        self.window.addButton(self.string["general"]["buttonBack"], callBack=self.callBack, args="back")
 
     def addToList(self, targetListbox, newItem):
         targetListbox.insert(END, newItem)

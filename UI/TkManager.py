@@ -11,10 +11,10 @@ class TkManager(object):
     but you can also get the clicked button value with getAsyncResponse
     """
 
-    def __init__(self, callback=None):
+    def __init__(self, callBack=None):
         self.tk = Tk()
-        if callback:
-            self.setClosingOperation(callback)
+        if callBack:
+            self.setClosingOperation(callBack)
         self.content = []
         self.asyncResponse = None
         self.lock = Lock()
@@ -62,11 +62,11 @@ class TkManager(object):
         self.lastContent().grid(row=len(self.content))
         return self.lastContent()
 
-    def addListbox(self, actionButtonText=None, callback=None, args=None):
+    def addListbox(self, actionButtonText=None, callBack=None, args=None):
         """
         Add a listbox
         :param actionButtonText: The text to show in the button, if no text is provided, no button is shown
-        :param callback: A function executed on button press
+        :param callBack: A function executed on button press
         :param args: The argument to give to the callback
         :return: the created listbox
         """
@@ -78,18 +78,18 @@ class TkManager(object):
             self.lastContent().grid(row=len(self.content)-1, column=1)
         return listbox
 
-    def addButton(self, text, mustReturn=False, callback=None, args=None):
+    def addButton(self, text, mustReturn=False, callBack=None, args=None):
         """
         Add a button to the tkWindow
         :param text: The content of the button
         :param mustReturn: True to destroy the window, False to only return control to the caller
-        :param callback: A function executed on button press
+        :param callBack: A function executed on button press
         :param args: The argument to give to the callback
         :return: The created button
         """
 
         # Method to call when clicked
-        action = [callback, self.quit if mustReturn else None]
+        action = [callBack, self.quit if mustReturn else None]
         args = [args, None]
         onClick = self.makeLambda(action, args)
 
@@ -100,9 +100,9 @@ class TkManager(object):
     ################################
     # Util functions
     ################################
-    def setClosingOperation(self, callback):
+    def setClosingOperation(self, callBack):
         # Define what to do when the window close
-        self.tk.protocol("WM_DELETE_WINDOW", callback)
+        self.tk.protocol("WM_DELETE_WINDOW", callBack)
 
     def setWindowTitle(self, title):
         """

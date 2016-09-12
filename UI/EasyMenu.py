@@ -19,7 +19,7 @@ class EasyMenu(GUI):
         self.getChoices(self.string["menu"]["operation"],
                             self.string["menu"]["choice"],
                             tkManager=self.window,
-                            callback=self.callBack,
+                            callBack=self.callBack,
                             append=True)
 
     def getSshInfo(self):

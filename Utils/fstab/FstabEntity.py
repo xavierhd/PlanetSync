@@ -26,5 +26,5 @@ class FstabEntity(object):
         fstab = FstabEntity(self.path)
         fstab.pre = self.pre
         fstab.currentData = self.currentData
-        fstab.after =self.after
+        fstab.after = self.after
         return fstab
