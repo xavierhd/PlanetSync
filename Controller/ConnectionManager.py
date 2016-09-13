@@ -37,15 +37,17 @@ class ConnectionManager(Controller):
         self.gUI.addToList(listBox, newItem)
 
     def addShare(self):
-        import pdb; pdb.set_trace()
         iq = InfoQuery(self.language)
         serverInfo = iq.getShareInfo()
-        # serverInfo == {shareName, username, hostname, remotePath, localPath}
-        self.fstabHandler.add(serverInfo)
+        # try ssh connection first
+        # add the key in the accepted key list
+        if serverInfo:
+            # serverInfo == {shareName, username, hostname, remotePath, localPath}
+            self.fstabHandler.add(serverInfo)
 
     """Override Controller.callback"""
     def callback(self, args):
         if args == "back":
             self.callBack("back")
         elif args == "addShare":
-            self.setListBox(self.gUI.primaryList, args)
+            self.addShare()

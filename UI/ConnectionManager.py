@@ -34,7 +34,7 @@ class ConnectionManager(GUI):
         self.window.addLabel(self.string["connectionManager"]["secondaryListTitle"])
         buttonSecondaryList = Button(self.window.tk,
             text=self.string["connectionManager"]["buttonSecondaryList"],
-            command=self.window.makeLambda(self.callBack, "addShare"))
+            command=self.window.makeLambda([self.callBack], ["addShare"]))
         self.secondaryList = self.window.addListbox(buttonSecondaryList)
         self.window.addSpacer()
         self.window.addButton(self.string["general"]["buttonBack"], callBack=self.callBack, args="back")

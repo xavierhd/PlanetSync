@@ -15,6 +15,7 @@ class SshAgent(object):
 
     def createKey(self, filename=""):
         # TODO: Check if key exist before trying to create it
+        # If a filename is provided, we need to format the a bit the string
         if filename:
             filename = "-f "+filename
         try:
