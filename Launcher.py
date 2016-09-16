@@ -24,6 +24,7 @@ class PlanetSync(object):
 
     def __init__(self):
         self.language = "english"  # TODO: Should be inside some config file
+        # The core container
         self.controller = Controller(TkManager(), SshAgent(), FstabHandler(), self.callback)
         self.controller.setLanguage(self.language)
         # This list contain all the class extending Controller

@@ -39,9 +39,9 @@ class ConnectionManager(Controller):
     def addShare(self):
         iq = InfoQuery(self.language)
         serverInfo = iq.getShareInfo()
-        # try ssh connection first
-        # add the key in the accepted key list
         if serverInfo:
+            # try an ssh connection first
+            # add the key in the accepted key list
             # serverInfo == {shareName, username, hostname, remotePath, localPath}
             self.fstabHandler.add(serverInfo)
 
