@@ -35,4 +35,7 @@ question:
         local_path: What is the local mounting directory path? (The directory must be  empty)
         share_name: What is the share name?
 general:
+    buttonAdd: Add
+    buttonAccept: Accept
+    buttonApply: Apply
     buttonBack: Back

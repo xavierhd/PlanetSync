@@ -2,6 +2,7 @@
 from Controller import Controller
 from UI import ConnectionManager as UI_ConnectionManager
 from UI.InfoQuery import InfoQuery
+from Utils import SshAgent
 
 class ConnectionManager(Controller):
     """Control the UI.ConnectionManager"""
@@ -40,6 +41,7 @@ class ConnectionManager(Controller):
         iq = InfoQuery(self.language)
         serverInfo = iq.getShareInfo()
         # try ssh connection first
+
         # add the key in the accepted key list
         if serverInfo:
             # serverInfo == {shareName, username, hostname, remotePath, localPath}
