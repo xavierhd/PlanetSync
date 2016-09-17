@@ -2,6 +2,7 @@
 from Controller import Controller
 from UI import ConnectionManager as UI_ConnectionManager
 from UI.InfoQuery import InfoQuery
+from Utils import SshAgent
 
 class ConnectionManager(Controller):
     """Control the UI.ConnectionManager"""

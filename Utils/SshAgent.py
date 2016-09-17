@@ -13,13 +13,21 @@ class SshAgent(object):
     def __init__(self):
         pass
 
+    def testSshfs(self, info):
+        client = self.getClient()
+        client.load_system_host_keys()
+        client.connect(info["hostname"])
+        stdin, stdout, stderr = client.exec_command('ls -l')
+
     def createKey(self, filename=""):
         # TODO: Check if key exist before trying to create it
-        # If a filename is provided, we need to format the a bit the string
+        # If a filename is provided, we need to format a bit the string
         if filename:
             filename = "-f "+filename
         try:
-            pexpect.spawn("ssh-keygen -q {0}".format(filename))
+            child = pexpect.spawn("ssh-keygen -q {0}".format(filename))
+            child.logfile = sys.stdout
+            print("child 0: \n", child)
         except Exception as e:
             print (e)
 
