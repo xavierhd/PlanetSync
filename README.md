@@ -1,4 +1,4 @@
-# PlanetSync
+# PlanetSync WIP
 The SSH Directory Mounter
 
 ## How does it work?
