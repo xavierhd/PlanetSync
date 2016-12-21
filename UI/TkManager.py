@@ -1,5 +1,6 @@
 from tkinter import *
 from threading import Lock
+import time
 
 
 class TkManager(object):
@@ -11,8 +12,18 @@ class TkManager(object):
     but you can also get the clicked button value with getAsyncResponse
     """
 
-    def __init__(self, callBack=None):
-        self.tk = Tk()
+    QUIT = 1
+    DESTROY = 2
+
+    def __init__(self, root=None, callBack=None):
+        if root:
+            self.tk = Toplevel(root)
+            self.tk.transient(root)
+            # We need to wait, or the grab_set explode
+            time.sleep(0.1)
+            self.tk.grab_set()
+        else:
+            self.tk = Tk()
         if callBack:
             self.setClosingOperation(callBack)
         self.content = []
@@ -62,12 +73,10 @@ class TkManager(object):
         self.lastContent().grid(row=len(self.content))
         return self.lastContent()
 
-    def addListbox(self, button=None, callBack=None, args=None):
+    def addListbox(self, button=None):
         """
         Add a listbox
-        :param actionButtonText: The text to show in the button, if no text is provided, no button is shown
-        :param callBack: A function executed on button press
-        :param args: The argument to give to the callback
+        :param button: A button to append at the right side of the listbox
         :return: the created listbox
         """
         listbox = Listbox(self.tk)
@@ -78,18 +87,22 @@ class TkManager(object):
             self.lastContent().grid(row=len(self.content)-1, column=1)
         return listbox
 
-    def addButton(self, text, mustReturn=False, callBack=None, args=None):
+    def addButton(self, text, mustReturn=0, callBack=None, args=None):
         """
         Add a button to the tkWindow
         :param text: The content of the button
-        :param mustReturn: True to destroy the window, False to only return control to the caller
+        :param mustReturn: "1" to only return control to the caller, "2" destroy the window
         :param callBack: A function executed on button press
         :param args: The argument to give to the callback
         :return: The created button
         """
-
+        windowBehavior = [
+            None,
+            self.quit,
+            self.destroy,
+        ]
         # Method to call when clicked
-        action = [callBack, self.quit if mustReturn else None]
+        action = [callBack, windowBehavior[mustReturn]]
         args = [args, None]
         onClick = self.makeLambda(action, args)
 
@@ -100,6 +113,12 @@ class TkManager(object):
     ################################
     # Util functions
     ################################
+    def hide(self):
+        self.tk.withdraw()
+
+    def show(self):
+        self.tk.deiconify()
+
     def setClosingOperation(self, callBack):
         # Define what to do when the window close
         self.tk.protocol("WM_DELETE_WINDOW", callBack)

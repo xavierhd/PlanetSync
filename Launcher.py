@@ -14,6 +14,8 @@ from Utils import SshAgent
 from Utils.fstab import FstabHandler
 from UI import TkManager
 
+from Locale import LangSelector
+
 
 class PlanetSync(object):
     """
@@ -26,7 +28,7 @@ class PlanetSync(object):
         self.language = "english"  # TODO: Should be inside some config file
         # The core container
         self.controller = Controller(TkManager(), SshAgent(), FstabHandler(), self.callback)
-        self.controller.setLanguage(self.language)
+        LangSelector.setLang(self.language)
         # This list contain all the class extending Controller
         self.controllerList = []
         self.run()

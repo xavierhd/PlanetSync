@@ -1,6 +1,9 @@
+from tkinter import Listbox, Button, END
+
 from UI.TkManager import TkManager
 from UI.GUI import GUI
-from tkinter import Listbox, Button, END
+
+from Locale import LangSelector as i18n
 
 
 class ConnectionManager(GUI):
@@ -12,60 +15,58 @@ class ConnectionManager(GUI):
 
     # Watchout, these are not the UI element, but the content of those
     primaryList = None
-    secondaryList = None
 
-    def __init__(self, windowManager, callBack, language):
-        super().__init__(windowManager, callBack, language)
+    def __init__(self, windowManager, callBack):
+        super().__init__(windowManager, callBack)
+        self.window.setClosingOperation(callBack)
 
     """Override GUI.show"""
     def show(self):
         """
         Init the window component
         """
-        self.window.setWindowTitle(self.string["connectionManager"]["title"])
+        self.window.setWindowTitle(i18n.string["connectionManager"]["title"])
         self.window.removeAll()
-        self.window.addLabel(self.string["connectionManager"]["instruction"])
+        self.window.addLabel(i18n.string["connectionManager"]["instruction"])
         self.window.addSpacer()
 
-        self.window.addLabel(self.string["connectionManager"]["primaryListTitle"])
-        self.primaryList = self.window.addListbox()
-        self.window.addSpacer()
+        self.window.addLabel(i18n.string["connectionManager"]["primaryListTitle"])
+        buttonSide = Button(self.window.tk,
+                            text=i18n.string["connectionManager"]["buttonPrimaryList"],
+                            command=self.window.makeLambda([self.callBack], ["addShare"]))
+        self.primaryList = self.window.addListbox(buttonSide)
+        self.primaryList.bind('<Double-1>', self.listboxEventHandler)
 
-        self.window.addLabel(self.string["connectionManager"]["secondaryListTitle"])
-        buttonSecondaryList = Button(self.window.tk,
-            text=self.string["connectionManager"]["buttonSecondaryList"],
-            command=self.window.makeLambda([self.callBack], ["addShare"]))
-        self.secondaryList = self.window.addListbox(buttonSecondaryList)
         self.window.addSpacer()
-        self.window.addButton(self.string["general"]["buttonBack"], callBack=self.callBack, args="back")
+        self.window.addButton(i18n.string["button"]["back"], callBack=self.callBack, args="back")
+
+    def setList(self, targetListbox, newList):
+        """
+        Set the provided list with the content of the provided serverList
+        :param targetListbox: The listbox instance to be setted
+        :param newList: An array of new values
+        """
+        targetListbox.delete(0, END)
+        for item in newList:
+            self.addToList(targetListbox, item)
 
     def addToList(self, targetListbox, newItem):
         targetListbox.insert(END, newItem)
 
-    def setList(self, targetListbox, serverList):
-        """
-        Set the provided list with the content of the provided serverList
-        :param targetListbox: The listbox instance to be setted
-        :param serverList: An array of new values
-        """
-        targetListbox.delete(0, END)
-        for server in serverList:
-            targetListbox.insert(END, server)
-
     def showAdvanced(self):
         tkm = TkManager()
-        tkm.addLabel(self.string["advanced"]["title"])
-        tkm.addLabel(self.string["advanced"]["info"])
-        for entry in self.string["advanced"]["choices"]:
+        tkm.addLabel(i18n.string["advanced"]["title"])
+        tkm.addLabel(i18n.string["advanced"]["info"])
+        for entry in i18n.string["advanced"]["choices"]:
             pass
 
     def getSshInfo(self):
         return {
-            "hostname": self.getInfo(self.string["question"]["get"]["remote_ip"],
+            "hostname": self.getInfo(i18n.string["question"]["get"]["remote_ip"],
                                      tkManager=self.window),
-            "username": self.getInfo(self.string["question"]["get"]["remote_user"],
+            "username": self.getInfo(i18n.string["question"]["get"]["remote_user"],
                                      tkManager=self.window),
-            "password": self.getPassword(self.string["question"]["get"]["remote_pw"],
+            "password": self.getPassword(i18n.string["question"]["get"]["remote_pw"],
                                          tkManager=self.window)
                 }
 
@@ -73,11 +74,11 @@ class ConnectionManager(GUI):
         tkm = self.getTkManager(None)
         # tkm.addTitle("SSH connection entry")
         tkm.addLabel("Please provide your remote computer's information: ")
-        tkm.addLabel(self.string["question"]["get"]["remote_ip"])
+        tkm.addLabel(i18n.string["question"]["get"]["remote_ip"])
         entryHostname = tkm.addEntry()
-        tkm.addLabel(self.string["question"]["get"]["remote_user"])
+        tkm.addLabel(i18n.string["question"]["get"]["remote_user"])
         entryUsername = tkm.addEntry()
-        tkm.addLabel(self.string["question"]["get"]["remote_pw"])
+        tkm.addLabel(i18n.string["question"]["get"]["remote_pw"])
         entryPassword = tkm.addEntry(True)
         if entry:
             entryHostname.set(entry["hostname"])
@@ -94,9 +95,9 @@ class ConnectionManager(GUI):
     def mountInfoWindow(self, entry=None):
         tkm = self.getTkManager(None)
         # tkm.addTitle("SSH connection entry")
-        tkm.addLabel(self.string["question"]["get"]["remote_path"])
+        tkm.addLabel(i18n.string["question"]["get"]["remote_path"])
         entryRemotePath = tkm.addEntry()
-        tkm.addLabel(self.string["question"]["get"]["local_path"])
+        tkm.addLabel(i18n.string["question"]["get"]["local_path"])
         entryLocalPath = tkm.addEntry()
         if entry:
             entryRemotePath.set(entry["remote_path"])
@@ -107,3 +108,8 @@ class ConnectionManager(GUI):
         return {"hostname": entryRemotePath.get(),
                 "username": entryLocalPath.get(),
                 }
+
+    def listboxEventHandler(self, event):
+        listbox = event.widget
+        index = int(listbox.curselection()[0])
+        self.callBack("edit", name=listbox.get(index))

@@ -6,7 +6,6 @@ class Controller(object):
     callBack = None
     sshAgent = None
     fstabHandler = None
-    language = "english"  # Default value
 
     def __init__(self, windowManager=None, sshAgent=None, fstabHandler=None, callBack=None, controller=None):
         """
@@ -49,9 +48,10 @@ class Controller(object):
         raise NotImplementedError("abstract method must be overridden")
 
     """abstract"""
-    def callback(self, args):
+    def callback(self, arg, **args):
         """
         The function used to be notified by window event
+        :param arg: What need to be done
         :param args: information about why the function has been call and to help to dispatch
         """
         raise NotImplementedError("abstract method must be overridden")

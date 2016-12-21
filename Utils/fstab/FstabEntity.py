@@ -1,5 +1,6 @@
 class FstabEntity(object):
 
+    dataRequirement = ["shareName", "username", "hostname", "remotePath", "localPath"]
     path = ""
 
     # Sections of the fstab file
@@ -25,6 +26,6 @@ class FstabEntity(object):
     def clone(self):
         fstab = FstabEntity(self.path)
         fstab.pre = self.pre
-        fstab.currentData = self.currentData
+        fstab.data = self.data
         fstab.after = self.after
         return fstab

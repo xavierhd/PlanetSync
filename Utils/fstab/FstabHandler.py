@@ -17,20 +17,38 @@ class Handler(FsOperation):
         serverList = [key for key in self.fstab.data]
         return serverList
 
+    def getInfo(self, name=None):
+        info = None
+        if name:
+            info = self.fstab.data.get(name)
+            info["shareName"] = name
+        return info
+
+
     def refreshCurrentData(self):
         """
         Update the current data with the fstab autogen section
         """
         self.currentData = self.parseSections(self.fstab)
 
-    def add(self, info):
+    def add(self, info, overwrite=False):
         """
         Add a drive to the fstab
         :param info: A dictionnary containing {shareName, username, hostname, remotePath, localPath}
+        :param overwrite: allow the overwrite of a share with the same name
+        :return: if it has worked
         """
-        # TODO: Check if info is already inside
-        # Right now the defaut is to overwrite any shared drive having the same name as another
-        self.fstab.data[info.pop("shareName")] = info
+        hasWorked = False
+        # Sorry future, i had fun at least
+        missing = [item for item in self.fstab.dataRequirement if item not in info]
+        if not missing:
+            if overwrite or info["shareName"] not in self.fstab.data:
+                self.fstab.data[info.pop("shareName")] = info
+                hasWorked = True
+        else:
+            raise AssertionError("Default key/value is missing in parameter <info>: {0}".format(missing))
+        return hasWorked
+
 
     def remove(self, shareName):
         """

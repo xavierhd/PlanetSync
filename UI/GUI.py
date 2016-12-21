@@ -1,6 +1,8 @@
 from UI.TkManager import TkManager
 from Locale import LangSelector
 
+from Locale import LangSelector as i18n
+
 
 class GUI(object):
     """
@@ -9,22 +11,20 @@ class GUI(object):
 
     window = None
     callBack = None
-    string = None
 
-    def __init__(self, windowManager, callBack, language="english"):
+    def __init__(self, windowManager, callBack):
         """
         :param windowManager: An instance of TkManager
         :param callBack: A function to bind button to
         :param language: The language to use, TODO: Deprecate this
         """
         self.callBack = callBack
-        self.string = LangSelector.getLang(language)
         self.window = windowManager
 
     def show(self):
         raise NotImplementedError('abstract method must be overridden')
 
-    def info(self, text, tkManager=None):
+    def info(self, text, tkManager=None, windowTitle=None):
         """
         :param text: The text to display
         :param tkManager: An instance of TkManager. If no manager is given, a the info will be displayed as a popup
@@ -34,6 +34,15 @@ class GUI(object):
         if not tkManager:
             tkm.addButton("Understood!", mustReturn=True, callBack=tkm.quit())
             tkm.run()
+
+    def askYesNo(self, text, tkManager=None):
+        tkm = TkManager(tkManager.tk)
+        tkm.addLabel(text)
+        tkm.setWindowTitle(i18n.string["popup"]["yesNoTitle"])
+        tkm.addButton("Yes", mustReturn=2, callBack=tkm.setAsyncResponse, args=True)
+        tkm.addButton("No", mustReturn=2, callBack=tkm.setAsyncResponse, args=False)
+        tkm.run()
+        return tkm.getAsyncResponse()
 
     def getPassword(self, text='Enter your password', tkManager=None):
         """
@@ -71,12 +80,12 @@ class GUI(object):
         :param choices: array of choices
         :return: The index of the clicked button
         """
-        isPopup = True if tkManager else False
+        isPopup = tkManager is not None
         tkm = self.getTkManager(tkManager)
         if not append:
             tkm.removeAll()
         if not callBack:
-            callBack = self.setAsyncResponse
+            callBack = tkm.setAsyncResponse
 
         tkm.addLabel(title)
         for i in range(len(choices)):
@@ -115,3 +124,15 @@ class GUI(object):
         Put an end to all this crazyness
         """
         self.window.destroy()
+
+    def hide(self):
+        """
+        Hide this window instance
+        """
+        self.window.hide()
+
+    def unhide(self):
+        """
+        Show this window instance
+        """
+        self.window.show()

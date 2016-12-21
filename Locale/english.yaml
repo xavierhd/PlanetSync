@@ -27,6 +27,7 @@ advanced:
         local_path: Local mounting directory path? (The directory must be empty)
 question:
     confirm: Are you sure that this is what you want to do?
+    overwrite: Are you sure that you want to overwrite the share named {shareName}
     get:
         remote_user: What is the remote user name?
         remote_ip: What is the remote ip?
@@ -34,8 +35,10 @@ question:
         remote_pw: What is the remote user password?
         local_path: What is the local mounting directory path? (The directory must be  empty)
         share_name: What is the share name?
-general:
-    buttonAdd: Add
-    buttonAccept: Accept
-    buttonApply: Apply
-    buttonBack: Back
+popup:
+    yesNoTitle: Confirm your action
+button:
+    add: Add
+    accept: Accept
+    apply: Apply
+    back: Back
