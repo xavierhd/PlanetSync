@@ -40,7 +40,8 @@ class InfoQuery(GUI):
         self.window.addLabel(i18n.string["question"]["get"]["local_path"])
         self.localPath = self.window.addEntry()
         self.window.addSpacer()
-        self.window.addButton(i18n.string["button"]["add"], mustReturn=1, callBack=self.getEntryInfo)
+        buttonString = i18n.string["button"]["edit"] if self.defaultValue else i18n.string["button"]["add"]
+        self.window.addButton(buttonString, mustReturn=1, callBack=self.getEntryInfo)
 
         if self.defaultValue:  # {shareName, username, hostname, remotePath, localPath}
             self.shareName.insert(0, self.defaultValue["shareName"])

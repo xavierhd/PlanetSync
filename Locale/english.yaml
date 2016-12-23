@@ -39,6 +39,7 @@ popup:
     yesNoTitle: Confirm your action
 button:
     add: Add
+    edit: Edit
     accept: Accept
     apply: Apply
     back: Back

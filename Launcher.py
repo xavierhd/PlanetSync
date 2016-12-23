@@ -59,15 +59,15 @@ class PlanetSync(object):
         """
         Function call if some operation need to return control to the basic Launcher
         """
-        if args == "quit":
-            self.terminate()
-        # Tell the program that the connectionManager need to be launched
-        elif args == "connectionManager":
-            self.startConnectionManager()
-        # Tell the program that the current window has finish it operation.
-        # The previous window is shown
-        elif args == "back":
-            self.launchPrevious()
+        action = {
+            'connectionManager': self.startConnectionManager,
+            'back': self.launchPrevious,
+            'quit': self.terminate,
+        }
+        try:
+            action[args]()
+        except Exception as e:
+            print(e)
 
     def terminate(self):
         """

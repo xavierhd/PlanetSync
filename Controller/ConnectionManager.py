@@ -21,24 +21,8 @@ class ConnectionManager(Controller):
     def run(self):
         self.gUI.setClosingOperation(self.callBack)
         self.gUI.show()
-        self.setListBox(self.gUI.primaryList, self.fstabHandler.getServerList())
+        self.gUI.setList(self.gUI.primaryList, self.fstabHandler.getServerList())
         self.gUI.run()
-
-    def setListBox(self, listBox, serverList):
-        """
-        Set the content of a listbox
-        :param listBox: The listBox to be modified
-        :param serverList: An array of server to be displayed in the listBox
-        """
-        self.gUI.setList(listBox, serverList)
-
-    def addToList(self, listBox, newItem):
-        """
-        Add one item to the provided listBox
-        :param listBox: The listbox to be modified
-        :param newItem: The element to add to the listbox
-        """
-        self.gUI.addToList(listBox, newItem)
 
     def addShare(self):
         iq = InfoQuery(root=self.windowManager.tk)
@@ -86,5 +70,5 @@ class ConnectionManager(Controller):
         elif arg == "edit":
             self.editShare(args["name"])
 
-        self.setListBox(self.gUI.primaryList, self.fstabHandler.getServerList())
+        self.gUI.setList(self.gUI.primaryList, self.fstabHandler.getServerList())
 

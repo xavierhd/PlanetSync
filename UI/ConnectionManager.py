@@ -9,7 +9,7 @@ from Locale import LangSelector as i18n
 class ConnectionManager(GUI):
     """
     Interface having a clickable list of server.
-    Each clicked item show in a second list the associated share.
+    ** Each clicked item show in a second list the associated share.
     A double click/Right click any item open an edition window to change related parameter.
     """
 
@@ -51,6 +51,11 @@ class ConnectionManager(GUI):
             self.addToList(targetListbox, item)
 
     def addToList(self, targetListbox, newItem):
+        """
+        Add one item to the provided listBox
+        :param targetListBox: The listbox to be modified
+        :param newItem: The element to add to the listbox
+        """
         targetListbox.insert(END, newItem)
 
     def showAdvanced(self):
