@@ -52,10 +52,11 @@ class PlanetSync(object):
         """
         Re-Launch the previously running controller
         """
-        self.controllerList.pop()
+        current = self.controllerList.pop()
+        # current.destroy()
         self.controllerList[-1].run()
 
-    def callback(self, args="quit"):
+    def callback(self, arg="quit"):
         """
         Function call if some operation need to return control to the basic Launcher
         """
@@ -65,9 +66,9 @@ class PlanetSync(object):
             'quit': self.terminate,
         }
         try:
-            action[args]()
-        except Exception as e:
-            print(e)
+            action[arg]()
+        except KeyError as e:
+            print("This callback command is wrong : {0}, {1}".format(arg, e))
 
     def terminate(self):
         """
