@@ -2,14 +2,17 @@
 
 from unittest.mock import MagicMock
 
-from UI.LangSelector import getLang
-from Utils.SshAgent import SshAgent
-from Utils import FileReader
+from utils.ssh_agent import SshAgent
+from utils import FileReader
 
 
 def main():
     ssh = SshAgent()
     ssh.sshfs(FileReader.readYaml("/home/xavier/Projet/testFile.yaml"))
 
+def testSshAgent():
+    ssh = SshAgent()
+    ssh.test()
+
 if __name__ == '__main__':
-    main()
+    testSshAgent()

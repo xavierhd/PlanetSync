@@ -1,8 +1,8 @@
 
-from UI.GUI import GUI
-from UI import TkManager
+from ui.gui import GUI
+from ui import TkManager
 
-from Locale import LangSelector as i18n
+from locale import lang_selector as i18n
 
 class InfoQuery(GUI):
 

@@ -15,15 +15,15 @@ The SSH Directory Mounter
 ###Debian
 *Install pip's build dependency
     ```bash
-        sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+        sudo apt-get install build-essential libssl-dev libffi-dev python3-dev python3-tk
     ```
 *Update pip
 	```bash
-	    sudo pip install pip -U
+	    sudo pip3 install pip -U
 	```
 *Install a system wide pip package
     ```bash
-	    sudo pip install virtualenv
+	    sudo pip3 install virtualenv
 	```
 *Create a virtual environment
 	```bash

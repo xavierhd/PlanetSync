@@ -1,7 +1,6 @@
-from UI.TkManager import TkManager
-from Locale import LangSelector
+from ui.tk_manager import TkManager
 
-from Locale import LangSelector as i18n
+from locale import lang_selector as i18n
 
 
 class GUI(object):
@@ -16,7 +15,6 @@ class GUI(object):
         """
         :param windowManager: An instance of TkManager
         :param callBack: A function to bind button to
-        :param language: The language to use, TODO: Deprecate this
         """
         self.callBack = callBack
         self.window = windowManager

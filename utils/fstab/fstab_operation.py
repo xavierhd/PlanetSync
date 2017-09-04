@@ -2,9 +2,9 @@ from os.path import expanduser, dirname, abspath
 import re  # regex utility
 from copy import copy
 
-from Utils.FileReader import read, readLine, dump
+from utils.file_reader import read, readLine, dump
 
-from Utils.fstab.FstabEntity import FstabEntity
+from utils.fstab.fstab_entity import FstabEntity
 
 
 class Operation(object):
@@ -102,7 +102,7 @@ class Operation(object):
         return data
 
     def loadTemplate(self):
-        templateDirectory = dirname(abspath(__file__)) + "/Template"
+        templateDirectory = dirname(abspath(__file__)) + "/template"
         self.headTemplate = read(templateDirectory + "/head.template")
         self.entryTemplate = read(templateDirectory + "/entry.template")
         self.tailTemplate = read(templateDirectory + "/tail.template")

@@ -1,0 +1,2 @@
+##{shareName}
+sshfs#{username}@{hostname}:{remotePath} {localPath} fuse {option} 0 0

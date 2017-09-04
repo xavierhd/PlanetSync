@@ -1,9 +1,9 @@
+#import pexpect
+#import paramiko
+#from paramiko.client import SSHClient
+#from scp import SCPClient
 
-import pexpect
-from paramiko.client import SSHClient
-from scp import SCPClient
-
-from Utils import FileReader
+from utils import file_reader
 
 
 class SshAgent(object):
@@ -13,11 +13,34 @@ class SshAgent(object):
     def __init__(self):
         pass
 
+    def test(self):
+        client = SSHClient()
+        client.load_system_host_keys()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        username = input("username: ")
+        password = input("password: ")
+        client.connect("192.168.0.2", username=username, password=password)
+        self.open_forward_tunnel(2000, "127.0.0.1", 2000, client.get_transport())
+
+
+        # stdin, stdout, stderr = client.exec_command("ls -l")
+        # lines = stdout.readlines()
+        # print (lines)
+
+
     def testSshfs(self, info):
         client = self.getClient()
         client.load_system_host_keys()
         client.connect(info["hostname"])
         stdin, stdout, stderr = client.exec_command('ls -l')
+
+
+    def open_forward_tunnel(self, local_port, remote_host, remote_port, transport):
+        class SubHander (Handler):
+            chain_host = remote_host
+            chain_port = remote_port
+            ssh_transport = transport
+        ForwardServer(('', local_port), SubHander).serve_forever()
 
     def createKey(self, filename=""):
         # TODO: Check if key exist before trying to create it
@@ -33,7 +56,7 @@ class SshAgent(object):
 
     def addKey(self, info):
         keyPath = "~/.ssh/id_rsa.pub"
-        if not FileReader.read(keyPath):
+        if not file_reader.read(keyPath):
             self.createKey(keyPath)
         try:
             command = "ssh-copy-id {username}@{hostname}".format(**info)

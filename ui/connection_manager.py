@@ -1,9 +1,9 @@
 from tkinter import Listbox, Button, END
 
-from UI.TkManager import TkManager
-from UI.GUI import GUI
+from ui.tk_manager import TkManager
+from ui.gui import GUI
 
-from Locale import LangSelector as i18n
+from locale import lang_selector as i18n
 
 
 class ConnectionManager(GUI):

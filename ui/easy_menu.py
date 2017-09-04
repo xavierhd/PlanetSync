@@ -1,6 +1,6 @@
-from UI.GUI import GUI
+from ui.gui import GUI
 
-from Locale import LangSelector as i18n
+from locale import lang_selector as i18n
 
 class EasyMenu(GUI):
     """

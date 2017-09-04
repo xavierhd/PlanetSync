@@ -6,15 +6,15 @@ Create an ssh file share with your home's dynamic IP server
 """
 from pprint import pprint
 
-from Controller import Controller
-from Controller.EasyMenu import EasyMenu
-from Controller.ConnectionManager import ConnectionManager
+from controller import Controller
+from controller.easy_menu import EasyMenu
+from controller.connection_manager import ConnectionManager
 
-from Utils import SshAgent
-from Utils.fstab import FstabHandler
-from UI import TkManager
+from utils.network.ssh_agent  import SshAgent
+from utils.fstab import FstabHandler
+from ui import TkManager
 
-from Locale import LangSelector
+from locale import lang_selector
 
 
 class PlanetSync(object):
@@ -28,7 +28,7 @@ class PlanetSync(object):
         self.language = "english"  # TODO: Should be inside some config file
         # The core container
         self.controller = Controller(TkManager(), SshAgent(), FstabHandler(), self.callback)
-        LangSelector.setLang(self.language)
+        lang_selector.setLang(self.language)
         # This list contain all the class extending Controller
         self.controllerList = []
         self.run()

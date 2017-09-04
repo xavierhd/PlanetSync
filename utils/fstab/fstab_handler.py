@@ -1,6 +1,6 @@
 
-from Utils.fstab.FstabOperation import Operation as FsOperation
-from Utils import FileReader
+from utils.fstab.fstab_operation import Operation as FsOperation
+from utils import file_reader
 
 
 class Handler(FsOperation):
@@ -13,7 +13,9 @@ class Handler(FsOperation):
         self.refreshCurrentData()
 
     def getServerList(self):
-        """Return the current server listed inside the autogen section"""
+        """
+        Return the current server listed inside the autogen section
+        """
         serverList = [key for key in self.fstab.data]
         return serverList
 

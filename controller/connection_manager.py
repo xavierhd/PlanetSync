@@ -1,11 +1,11 @@
 
 
-from Controller import Controller
-from UI import ConnectionManager as UI_ConnectionManager
-from UI.InfoQuery import InfoQuery
+from controller import Controller
+from ui import ConnectionManager as UI_ConnectionManager
+from ui.info_query import InfoQuery
 
-from Locale import LangSelector as i18n
-from Utils import SshAgent
+from locale import lang_selector as i18n
+from utils.network import ssh_agent
 
 class ConnectionManager(Controller):
     """Control the UI.ConnectionManager"""
@@ -59,7 +59,7 @@ class ConnectionManager(Controller):
                     tkManager=self.windowManager)
                 if userWantToOverwrite:
                     jobDone = self.fstabHandler.add(info, overwrite=True)
-        return jobDone or userWantToOverwrite
+        return jobDone
 
     """Override Controller.callback"""
     def callback(self, arg='back', **args):

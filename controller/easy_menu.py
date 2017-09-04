@@ -1,8 +1,8 @@
 
-from Controller import Controller
-from UI import EasyMenu as UI_EasyMenu
+from controller import Controller
+from ui.easy_menu import EasyMenu as UI_EasyMenu
 
-from Locale import LangSelector as i18n
+from locale import lang_selector as i18n
 
 class EasyMenu(Controller):
     """Operate the UI named EasyMenu"""

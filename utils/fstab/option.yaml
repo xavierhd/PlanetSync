@@ -1,0 +1,53 @@
+# defaut: comment=sshfs,noauto,users,exec,uid=1000,gid=1000,allow_other,reconnect,transform_symlinks,BatchMode=yes
+flag:
+    noauto:
+        value: noauto
+        description: null
+        not_friend_with: null
+    users:
+        value: users
+        description: null
+        not_friend_with: null
+    exec:
+        value: exec
+        description: null
+        not_friend_with: null
+    allow_other:
+        value: allow_other
+        description: null
+        not_friend_with: null
+    reconnect:
+        value: reconnect
+        description: null
+        not_friend_with: null
+    transform_symlinks:
+        value: transform_symlinks
+        description: null
+        not_friend_with: null
+
+choice:
+    BatchMode:
+        value: BashMode
+        possibility:
+            - yes
+            - no
+        description: null
+        not_friend_with: null
+
+
+number:
+    uid:
+        value: uid
+        description: null
+        not_friend_with: null
+    gid:
+        value: gid
+        description: null
+        not_friend_with: null
+
+
+string:
+    comment:
+        value: comment
+        description: null
+        not_friend_with: null
