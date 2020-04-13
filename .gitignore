@@ -178,3 +178,7 @@ fabric.properties
 
 ### My own things
 /activate
+.venv
+.test_file.yaml
+.vscode
+.test_config.yaml
