@@ -7,25 +7,25 @@ class EasyMenu(Controller):
 
     def __init__(self, controller):
         super().__init__(controller=controller)
-        self.gUI = UI_EasyMenu(self.windowManager, self.callback, self.language)
+        self.gui = UI_EasyMenu(self.window_manager, self.callback, self.language)
 
     """Override Controller.run"""
     def run(self):
-        self.gUI.setClosingOperation(self.callBack)
-        self.gUI.show()
-        self.gUI.run()
+        self.gui.set_closing_operation(self.parent_callback)
+        self.gui.show()
+        self.gui.run()
 
     """Override Controller.callback"""
     def callback(self, choice):
         if choice == 0:
-            info = self.gUI.getSshfsInfo()
+            info = self.gui.get_sshfs_info()
             self.sshAgent.sshfs(info)
         elif choice == 1:
-            info = self.gUI.getSshInfo()
+            info = self.gui.get_ssh_info()
             self.sshAgent.addKey(info)
         elif choice == 2:
-            info = self.gUI.getSshfsInfo()
-            share_name = self.gUI.getInfo(self.gUI.string["question"]["get"]["share_name"])
+            info = self.gui.get_sshfs_info()
+            share_name = self.gui.get_info(self.gui.string["question"]["get"]["share_name"])
             info.update({"shareName": share_name})
             self.fstabHandler.add(info)
         elif choice == 3:
@@ -41,4 +41,4 @@ class EasyMenu(Controller):
         elif choice == 4:
             print ("button #5 pressed")
         elif choice == 5:
-            self.callBack("connectionManager")
+            self.parent_callback("connectionManager")

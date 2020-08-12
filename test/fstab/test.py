@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 
-from unittest.mock import MagicMock
+import pytest
 
 #from UI.LangSelector import getLang
-from utils.SshAgent import SshAgent
-from utils import FileReader
+# from .src.utils.SshAgent import SshAgent
+# from utils import FileReader
 
 
-def main():
-    ssh = SshAgent()
-    ssh.sshfs(FileReader.readYaml("/home/xavier/Projet/.test_file.yaml"))
-
-if __name__ == '__main__':
-    main()
+def test_sshFS():
+    assert 1 == 1

@@ -1,6 +1,6 @@
-from utils import FileReader
-from utils.Generator import Generator
+from utils import file_reader
+from utils import generator
 from network import Network
-from utils.SshAgent import SshAgent
+from utils.ssh_agent import SshAgent
 import fstab
 

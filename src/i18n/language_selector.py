@@ -1,9 +1,9 @@
 
 
-from utils import FileReader
+from utils import file_reader
 
 
 def get_lang(language):
     if language:
         langfile = "./i18n/{0}.yaml".format(language)
-        return FileReader.readYaml(langfile)
+        return file_reader.readYaml(langfile)

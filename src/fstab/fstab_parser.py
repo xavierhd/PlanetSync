@@ -5,7 +5,7 @@ import uuid
 import re  # regex utility
 from copy import copy
 
-from utils.FileReader import read, readLine, dump
+from utils.file_reader import read, readLine, dump
 
 
 class FstabParser:

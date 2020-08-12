@@ -24,7 +24,7 @@ class PlanetSync(object):
 
     def __init__(self):
         self.language = "english"  # TODO: Should be inside some config file
-        path = 'Some_path'
+        path = '../test/test_fstab_file/happy_full'
         self.base_controller = Controller(TkManager(), SshAgent(), FstabFile(path), self.callback)
         self.base_controller.setLanguage(self.language)
         # This list contain all the class extending Controller

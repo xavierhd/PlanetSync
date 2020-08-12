@@ -2,33 +2,33 @@
 
 class Controller(object):
 
-    windowManager = None
-    callBack = None
+    window_manager = None
+    parent_callback = None
     sshAgent = None
     fstabHandler = None
     language = "english"  # Default value
 
-    def __init__(self, windowManager=None, sshAgent=None, fstabHandler=None, callBack=None, controller=None):
+    def __init__(self, window_manager=None, sshAgent=None, fstabHandler=None, parent_callback=None, controller=None):
         """
         This class can be instanciated using two methods:
         1: Provide all arguments, but the last
         2: Provide the last argument
-        :param windowManager: The window manager to use
+        :param window_manager: The window manager to use
         :param sshAgent: The instance of the SshAgent
         :param fstabHandler: The instance of the FstabHandler
-        :param callBack: A function to be used to give information about the running process
+        :param parent_callback: A function to be used to give information about the running process
         :param controller: And instance of a Controller of any class extending Controller, used to make a copy of the already built Controller
         """
         if(controller):
-            self.windowManager = controller.windowManager
+            self.window_manager = controller.window_manager
             self.sshAgent = controller.sshAgent
             self.fstabHandler = controller.fstabHandler
-            self.callBack = controller.callBack
+            self.parent_callback = controller.parent_callback
         else:
-            self.windowManager = windowManager
+            self.window_manager = window_manager
             self.sshAgent = sshAgent
             self.fstabHandler = fstabHandler
-            self.callBack = callBack
+            self.parent_callback = parent_callback
 
     def setLanguage(self, language):
         """Change the used language"""
@@ -36,12 +36,7 @@ class Controller(object):
 
     def destroy(self):
         """Terminate the main window instance"""
-        self.windowManager.destroy()
-
-    """abstract"""
-    def refresh(self):
-        """Refresh the main window instance"""
-        raise NotImplementedError("abstract method must be overridden")
+        self.window_manager.destroy()
 
     """abstract"""
     def run(self):

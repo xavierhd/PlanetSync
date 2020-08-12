@@ -8,7 +8,7 @@ class FstabFile(FstabParser):
     def clone(self):
         fstab = FstabFile(self.path)
         fstab.head = self.head
-        fstab.currentData = self.currentData
+        fstab.current_data = self.current_data
         fstab.tail = self.tail
         return fstab
 

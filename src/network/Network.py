@@ -1,10 +1,10 @@
-def internetExist(self):
+import requests
+
+def internet_exist(self):
     r = requests.head("http://google.ca")
     return str(r.status_code) == '301'
 
-
-
-def readIP(self, path):
+def read_IP(self, path):
     ip = None
     try:
         with open(path) as file:

@@ -3,7 +3,7 @@ import pexpect
 from paramiko.client import SSHClient
 from scp import SCPClient
 
-from utils import FileReader
+from utils import file_reader
 
 
 class SshAgent(object):

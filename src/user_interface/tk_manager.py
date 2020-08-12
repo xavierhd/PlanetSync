@@ -11,12 +11,12 @@ class TkManager(object):
     but you can also get the clicked button value with getAsyncResponse
     """
 
-    def __init__(self, callBack=None):
+    def __init__(self, callback=None):
         self.tk = Tk()
-        if callBack:
-            self.setClosingOperation(callBack)
+        if callback:
+            self.set_closing_operation(callback)
         self.content = []
-        self.asyncResponse = None
+        self.async_response = None
         self.lock = Lock()
 
     def run(self):
@@ -25,107 +25,109 @@ class TkManager(object):
         """
         self.tk.mainloop()
 
-    def removeAll(self):
+    def remove_all(self):
         """
-        Delete the all the component from the window
+        Delete all the component from the window
         """
         for item in self.content:
             item.grid_forget()
         self.content = []
 
-    def addSpacer(self):
+    def add_spacer(self):
         """
         Add a spacer in the window
         """
-        self.content.append(Label(self.tk, text=" "))
-        self.lastContent().grid(row=len(self.content))
+        spacer = Label(self.tk, text=" ")
+        self.add_widget_to_content(spacer)
 
-    def addLabel(self, text):
+    def add_label(self, text):
         """
         Add a label to the window
         :param text: The text to display on the label
         """
-        self.content.append(Label(self.tk, text=text))
-        self.lastContent().grid(row=len(self.content))
-        return self.lastContent()
+        label = Label(self.tk, text=text)
+        self.add_widget_to_content(label)
+        return label
 
-    def addEntry(self, isPassword=False):
+    def add_entry(self, isPassword=False):
         """
         Add an entry field
         :param isPassword: True to obfuscate the entry field
         :return: the created entry
         """
         if isPassword:
-            self.content.append(Entry(self.tk, show="*"))
+            entry = Entry(self.tk, show="*")
         else:
-            self.content.append(Entry(self.tk))
-        self.lastContent().grid(row=len(self.content))
-        return self.lastContent()
+            entry = Entry(self.tk)
+        self.add_widget_to_content(entry)
+        return entry
 
-    def addListbox(self, button=None, callBack=None, args=None):
+    def add_listbox(self, button=None, callback=None, args=None):
         """
         Add a listbox
         :param actionButtonText: The text to show in the button, if no text is provided, no button is shown
-        :param callBack: A function executed on button press
+        :param callback: A function executed on button press
         :param args: The argument to give to the callback
         :return: the created listbox
         """
         listbox = Listbox(self.tk)
-        self.content.append(listbox)
-        listbox.grid(row=len(self.content))
+        self.add_widget_to_content(listbox)
         if button:
+            button.grid(row=len(self.content)-1, column=1)
             self.content.append(button)
-            self.lastContent().grid(row=len(self.content)-1, column=1)
         return listbox
 
-    def addButton(self, text, mustReturn=False, callBack=None, args=None):
+    def add_button(self, text, must_return=False, callback=None, args=None):
         """
         Add a button to the tkWindow
         :param text: The content of the button
-        :param mustReturn: True to destroy the window, False to only return control to the caller
-        :param callBack: A function executed on button press
+        :param must_return: True to destroy the window, False to only return control to the caller
+        :param callback: A function executed on button press
         :param args: The argument to give to the callback
         :return: The created button
         """
-
         # Method to call when clicked
-        action = [callBack, self.quit if mustReturn else None]
+        action = [callback, self.quit if must_return else None]
         args = [args, None]
-        onClick = self.makeLambda(action, args)
+        on_click = self.make_lambda(action, args)
+        button = Button(self.tk, text=text, command=on_click)
+        button.grid(row=len(self.content), sticky=W, pady=4)
+        self.content.append(button)
+        return self.last_content()
 
-        self.content.append(Button(self.tk, text=text, command=onClick))
-        self.lastContent().grid(row=len(self.content), sticky=W, pady=4)
-        return self.lastContent()
+    def add_widget_to_content(self, widget):
+        widget.grid(row=len(self.content))
+        self.content.append(widget)
 
     ################################
     # Util functions
     ################################
-    def setClosingOperation(self, callBack):
+    def set_closing_operation(self, callback):
         # Define what to do when the window close
-        self.tk.protocol("WM_DELETE_WINDOW", callBack)
+        self.tk.protocol("WM_DELETE_WINDOW", callback)
 
-    def setWindowTitle(self, title):
+    def set_window_title(self, title):
         """
         Change the window bar text
         :param title: The text to be set
         """
         self.tk.wm_title(title)
 
-    def lastContent(self):
+    def last_content(self):
         """
         :return: The last added content
         """
         return self.content[-1]
 
-    def makeLambda(self, actions, args=None):
+    def make_lambda(self, actions, args=None):
         """
         Build a lambda expression
         :param actions: a list of function
         :param args: a list of args to feed each functions call
         """
-        return lambda: self.superLambda(actions, args)
+        return lambda: self.super_lambda(actions, args)
 
-    def superLambda(self, actions, args):
+    def super_lambda(self, actions, args):
         """
         Pack any function and it args inside a lambda call
         :param actions: a list of function
@@ -154,24 +156,24 @@ class TkManager(object):
         """
         self.tk.quit()
 
-    def setAsyncResponse(self, args=None):
+    def set_async_response(self, args=None):
         """
         Use this to save some function return value and access it later
         """
         self.lock.acquire()
         try:
-            self.asyncResponse = args()
+            self.async_response = args()
         except TypeError:
             # args is definitely not a function
-            self.asyncResponse = args
+            self.async_response = args
         self.lock.release()
 
-    def getAsyncResponse(self):
+    def get_async_response(self):
         """
         Access the saved response from the set caller previously
         """
         self.lock.acquire()
-        val = self.asyncResponse
-        self.asyncResponse = None
+        val = self.async_response
+        self.async_response = None
         self.lock.release()
         return val

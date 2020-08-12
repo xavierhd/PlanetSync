@@ -11,99 +11,101 @@ class ConnectionManager(GUI):
     """
 
     # Watchout, these are not the UI element, but the content of those
-    primaryList = None
-    secondaryList = None
+    primary_list = None
+    secondary_list = None
 
-    def __init__(self, windowManager, callBack, language):
-        super().__init__(windowManager, callBack, language)
+    def __init__(self, window_manager, callback, language):
+        super().__init__(window_manager, callback, language)
 
     """Override GUI.show"""
     def show(self):
         """
         Init the window component
         """
-        self.window.setWindowTitle(self.string["connectionManager"]["title"])
-        self.window.removeAll()
-        self.window.addLabel(self.string["connectionManager"]["instruction"])
-        self.window.addSpacer()
+        self.window_manager.set_window_title(self.string["connectionManager"]["title"])
+        self.window_manager.remove_all()
+        self.window_manager.add_label(self.string["connectionManager"]["instruction"])
+        self.window_manager.add_spacer()
 
-        self.window.addLabel(self.string["connectionManager"]["primaryListTitle"])
-        self.primaryList = self.window.addListbox()
-        self.window.addSpacer()
+        self.window_manager.add_label(self.string["connectionManager"]["primaryListTitle"])
+        self.primary_list = self.window_manager.add_listbox()
+        self.window_manager.add_spacer()
 
-        self.window.addLabel(self.string["connectionManager"]["secondaryListTitle"])
-        buttonSecondaryList = Button(self.window.tk,
+        self.window_manager.add_label(self.string["connectionManager"]["secondaryListTitle"])
+        buttonSecondaryList = Button(self.window_manager.tk,
             text=self.string["connectionManager"]["buttonSecondaryList"],
-            command=self.window.makeLambda([self.callBack], ["addShare"]))
-        self.secondaryList = self.window.addListbox(buttonSecondaryList)
-        self.window.addSpacer()
-        self.window.addButton(self.string["general"]["buttonBack"], callBack=self.callBack, args="back")
+            command=self.window_manager.make_lambda([self.callback], ["addShare"]))
+        self.secondary_list = self.window_manager.add_listbox(buttonSecondaryList)
+        self.window_manager.add_spacer()
+        self.window_manager.add_button(self.string["general"]["buttonBack"], callback=self.callback, args="back")
 
-    def addToList(self, targetListbox, newItem):
-        targetListbox.insert(END, newItem)
+    def add_to_list(self, target_listbox, newItem):
+        target_listbox.insert(END, newItem)
 
-    def setList(self, targetListbox, serverList):
+    def set_list(self, target_listbox, serverList):
         """
         Set the provided list with the content of the provided serverList
-        :param targetListbox: The listbox instance to be setted
+        :param target_listbox: The listbox instance to be setted
         :param serverList: An array of new values
         """
-        targetListbox.delete(0, END)
+        target_listbox.delete(0, END)
         for server in serverList:
-            targetListbox.insert(END, server)
+            target_listbox.insert(END, server)
 
-    def showAdvanced(self):
+    def show_advanced(self):
         tkm = TkManager()
-        tkm.addLabel(self.string["advanced"]["title"])
-        tkm.addLabel(self.string["advanced"]["info"])
+        tkm.add_label(self.string["advanced"]["title"])
+        tkm.add_label(self.string["advanced"]["info"])
         for entry in self.string["advanced"]["choices"]:
             pass
 
-    def getSshInfo(self):
+    def get_ssh_info(self):
         return {
-            "hostname": self.getInfo(self.string["question"]["get"]["remote_ip"],
-                                     tkManager=self.window),
-            "username": self.getInfo(self.string["question"]["get"]["remote_user"],
-                                     tkManager=self.window),
-            "password": self.getPassword(self.string["question"]["get"]["remote_pw"],
-                                         tkManager=self.window)
-                }
+            "hostname": self.get_info(self.string["question"]["get"]["remote_ip"],
+                                     tk_manager=self.window_manager),
+            "username": self.get_info(self.string["question"]["get"]["remote_user"],
+                                     tk_manager=self.window_manager),
+            "password": self.get_password(self.string["question"]["get"]["remote_pw"],
+                                         tk_manager=self.window_manager)
+        }
 
-    def sshfsInfoWindow(self, entry=None):
-        tkm = self.getTkManager(None)
+    def sshfs_info_window(self, entry=None):
+        tkm = self.get_tk_manager(None)
         # tkm.addTitle("SSH connection entry")
-        tkm.addLabel("Please provide your remote computer's information: ")
-        tkm.addLabel(self.string["question"]["get"]["remote_ip"])
-        entryHostname = tkm.addEntry()
-        tkm.addLabel(self.string["question"]["get"]["remote_user"])
-        entryUsername = tkm.addEntry()
-        tkm.addLabel(self.string["question"]["get"]["remote_pw"])
-        entryPassword = tkm.addEntry(True)
+        tkm.add_label("Please provide your remote computer's information: ")
+        tkm.add_label(self.string["question"]["get"]["remote_ip"])
+        entryHostname = tkm.add_entry()
+        tkm.add_label(self.string["question"]["get"]["remote_user"])
+        entryUsername = tkm.add_entry()
+        tkm.add_label(self.string["question"]["get"]["remote_pw"])
+        entryPassword = tkm.add_entry(True)
         if entry:
             entryHostname.set(entry["hostname"])
             entryUsername.set(entry["username"])
             entryPassword.set(entry["password"])
 
-        tkm.addButton("Continue", mustReturn=False)
+        tkm.add_button("Continue", must_return=False)
         tkm.run()
-        return {"hostname": entryHostname.get(),
-                "username": entryUsername.get(),
-                "password": entryPassword.get(),
-                }
+        return {
+            "hostname": entryHostname.get(),
+            "username": entryUsername.get(),
+            "password": entryPassword.get(),
+        }
 
-    def mountInfoWindow(self, entry=None):
-        tkm = self.getTkManager(None)
+    def mount_info_window(self, entry=None):
+        tkm = self.get_tk_manager(None)
         # tkm.addTitle("SSH connection entry")
-        tkm.addLabel(self.string["question"]["get"]["remote_path"])
-        entryRemotePath = tkm.addEntry()
-        tkm.addLabel(self.string["question"]["get"]["local_path"])
-        entryLocalPath = tkm.addEntry()
+        tkm.add_label(self.string["question"]["get"]["remote_path"])
+        entry_remote_path = tkm.add_entry()
+        tkm.add_label(self.string["question"]["get"]["local_path"])
+        entry_local_path = tkm.add_entry()
         if entry:
-            entryRemotePath.set(entry["remote_path"])
-            entryLocalPath.set(entry["local_path"])
+            entry_remote_path.set(entry["remote_path"])
+            entry_local_path.set(entry["local_path"])
 
-        tkm.addButton("Continue", mustReturn=False)
+        tkm.add_button("Continue", must_return=False)
         tkm.run()
-        return {"hostname": entryRemotePath.get(),
-                "username": entryLocalPath.get(),
-                }
+        return {
+            "hostname": entry_remote_path.get(),
+            "username": entry_local_path.get(),
+        }
