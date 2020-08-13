@@ -33,7 +33,7 @@ class SshAgent(object):
 
     def addKey(self, info):
         keyPath = "~/.ssh/planetSync.pub"
-        if not FileReader.read(keyPath):
+        if not file_reader.read(keyPath):
             self.createKey(keyPath)
         try:
             command = "ssh-copy-id {username}@{hostname}".format(**info)

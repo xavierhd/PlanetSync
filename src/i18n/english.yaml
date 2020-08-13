@@ -1,17 +1,30 @@
 menu:
     title: PlanetSync
-    info: The SSH Directory Mounter\nCreate an ssh file share with your home's dynamic IP server
-    operation: What do you want to do ?
-    choice:
-        0: Quick mount a folder (Temporarly)
-        1: Add an sshKey to the remote computer
-        2: Mount a folder "forever"
-        3: Unmount a folder
-        4: Remove a folder mounted "forever"
-        5: Connection Manager
-connectionManager:
+    info: |
+        The SSH Directory Mounter
+        Create an ssh file share with your home's dynamic IP server
+    message: What do you want to do ?
+    choices:
+        - Quick mount a folder (Temporarly)
+        - Add an sshKey to the remote computer
+        - Mount a folder with fstab
+        - Unmount a folder from fstab
+        - See my mount
+single_mount:
+    message: Select the action you want to perform
+    delete_confirm:
+        question: Are you sure that you want to remove the mount '{0}'? This action cannot be cancelled!
+        'yes': Yes, delete it.
+        'no': No, just go back.
+    attributes:
+        mount_name: Name of the mount
+        remote_username: Remote username
+        remote_computer: Remote computer IP/domain
+        remote_path: Remote path to mount localy
+        local_mount_path: Local mount point
+all_mount:
     title: PlanetSync - Connection Manager
-    instruction: Click on an item of the list to extend associated info
+    message: Select the mount name that you want to edit
     primaryListTitle: Server list
     buttonPrimaryList: Add a connection
     secondaryListTitle: Share list of the selected server
@@ -35,7 +48,11 @@ question:
         local_path: What is the local mounting directory path? (The directory must be  empty)
         share_name: What is the share name?
 general:
-    buttonAdd: Add
-    buttonAccept: Accept
-    buttonApply: Apply
-    buttonBack: Back
+    delete: Delete
+    edit: Edit
+    add: Add
+    accept: Accept
+    apply: Apply
+    back: <<< Go Back
+    exit: Exit
+

@@ -7,7 +7,7 @@ def internet_exist(self):
 def read_IP(self, path):
     ip = None
     try:
-        with open(path) as file:
+        with open(path) as f:
             ip = f.readline()
     except:
         print ("no file named %s" %path)
