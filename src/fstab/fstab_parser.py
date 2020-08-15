@@ -64,31 +64,15 @@ class FstabParser:
         Read the line to be added as a key(title) or value.
         :param line: (str) The line itself to add from the fstab file.
         """
-        if len(line) > 0 and line[0] == '#':
-            self.saved_key = self.get_key(line)
-        else:
-            if not self.saved_key:
-                self.saved_key = "No name - " + uuid.uuid4().hex
-            # We link the key to the line
-            self.data[self.saved_key] = self.parse_line(line)
-            self.saved_key = None
-
-    def parse_line(self, line):
-        """
-        Parse the raw data from the fstab's autogen retrieved section
-        """
-        parsed_line = {}
-        # ?P<name> is an ID that can be retrieved with the match object
-        pattern = re.compile(r"sshfs#(?P<remote_username>(?:[\w\d\s_\+-])+)@(?P<remote_computer>(?:[\w\d_\+-.])+):(?P<remote_path>(?:\/|[\w\d_\+-.]|(?:\\[^\w\d_\+-.]))+) (?P<local_mount_path>(?:\/|[\w\d_\+-.]|(?:\\[^\w\d_\+-.]))+)")
-        match = pattern.match(line)
-        if(match):
-            # groupindex is a dictionary of all the ?P<name> in the regex
-            parsed_line = {item: None for item in pattern.groupindex}
-            for group in parsed_line:
-                parsed_line[group] = match.group(group)
-        else:
-            print ("FstabOperation::parseData: The regex cannot match the string")
-        return parsed_line
+        if len(line) > 0:
+            if line[0] == '#':
+                self.saved_key = self.get_key(line)
+            else:
+                if not self.saved_key:
+                    self.saved_key = "No name - " + uuid.uuid4().hex
+                # We link the key to the line
+                self.data[self.saved_key] = self.build_fstab_entry(line)
+                self.saved_key = None
 
     def commit(self):
         """

@@ -179,6 +179,7 @@ def display_single_mount(mount_name):
         is_delete_confirmed = confirm_choice(confirm_question, yes, no)
         if is_delete_confirmed:
             fstab.remove(mount_name)
+            fstab.commit()
             return MOVE_BACK_ONE_LEVEL
 
 if __name__ == '__main__':
