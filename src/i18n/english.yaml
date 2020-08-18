@@ -16,7 +16,46 @@ single_mount:
         question: Are you sure that you want to remove the mount '{0}'? This action cannot be cancelled!
         'yes': Yes, delete it.
         'no': No, just go back.
-    attributes:
+    base_fields:
+        device:
+            name: 'Device'
+            description: The element which contains a filesystem. This is the "What" in "What is mounted"
+            choices:
+                label:
+                    name: 'Label'
+                    description: Mount a device using it's label
+                uuid:
+                    name: 'UUID'
+                    description: Mount a device using it's UUID
+                samba:
+                    name: 'Samba'
+                    description: Network share which is compatible with Windows computers
+                nfs:
+                    name: 'NFS'
+                    description: Network share...
+                sshfs:
+                    name: 'SSHfs'
+                    description: Network share using the ssh protocol
+                device:
+                    name: 'Device'
+                    description: Mount a device using it's /dev/ path
+        local_mount_path:
+            name: 'Local mount path'
+            description: The directory on your root file system (aka mount point) from which it will be possible to access the content of the device
+        file_system_type:
+            name: 'File system type'
+            description: Type of file system
+        options:
+            name: 'Options'
+            description: Mount options of access to the device
+        dump:
+            name: 'Enable dump backup'
+            description: Enable or disable backing up of the device (the command dump)
+        pass_number:
+            name: 'fsck check order'
+            description: Controls the order in which fsck checks the device/partition for errors at boot time
+    device_fields:
+
         mount_name: Name of the mount
         remote_username: Remote username
         remote_computer: Remote computer IP/domain

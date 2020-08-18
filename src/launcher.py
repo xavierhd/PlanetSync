@@ -143,21 +143,26 @@ def display_all_mount():
     if not answer or answer[answer_name] == choice_back:
         return MOVE_BACK_ONE_LEVEL
     else:
-        return lambda: display_single_mount(answer[answer_name])
+        return lambda: display_single_mount_base_field(answer[answer_name])
 
-def display_single_mount(mount_name):
-    prefixes = i18n_text['single_mount']['attributes']
+def display_single_mount_base_field(mount_name):
+    base_fields_text = i18n_text['single_mount']['base_fields']
     message = i18n_text['single_mount']['message']
     edit = i18n_text['general']['edit']
     choice_delete = i18n_text['general']['delete']
     
     edit_choices = []
-    data = fstab.data[mount_name]
-    for attribute in data:
-        prefix = prefixes[attribute]
-        data_value = data[attribute]
+    data = fstab.entries[mount_name]
+    for attribute in data.base_fields:
+        name = base_fields_text[attribute]['name']
+        data_value = data.base_fields[attribute]
+        description = base_fields_text[attribute]['description']
         edit_choices.append({
-            'name': '[' + edit + ']' + prefix + ': ' + data_value,
+            'name': '[{edit}] {name} : {data_value} ({description})'.format(
+                edit=edit,
+                name=name,
+                data_value=data_value,
+                description=description),
             'value': attribute
         })
     choices = edit_choices + [Separator(), choice_delete, Separator(), choice_back]
