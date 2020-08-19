@@ -10,52 +10,75 @@ menu:
         - Mount a folder with fstab
         - Unmount a folder from fstab
         - See my mount
-single_mount:
+mount:
     message: Select the action you want to perform
     delete_confirm:
-        question: Are you sure that you want to remove the mount '{0}'? This action cannot be cancelled!
+        question: Are you sure that you want to remove the mount '{0}'? This action cannot be reverted!
         'yes': Yes, delete it.
         'no': No, just go back.
     base_fields:
         device:
             name: 'Device'
-            description: The element which contains a filesystem. This is the "What" in "What is mounted"
-            choices:
+            description: The element which contains a filesystem
+            types:
                 label:
                     name: 'Label'
                     description: Mount a device using it's label
+                    device_fields:
+                        label:
+                            name: Label name
+                            description: Description
                 uuid:
                     name: 'UUID'
                     description: Mount a device using it's UUID
+                    device_fields:
+                        label:
+                            name: Label name
+                            description: Description
                 samba:
                     name: 'Samba'
                     description: Network share which is compatible with Windows computers
+                    device_fields:
+                        label:
+                            name: Label name
+                            description: Description
                 nfs:
                     name: 'NFS'
                     description: Network share...
+                    device_fields:
+                        label:
+                            name: Label name
+                            description: Description
                 sshfs:
                     name: 'SSHfs'
                     description: Network share using the ssh protocol
+                    device_fields:
+                        label:
+                            name: Label name
+                            description: Description
                 device:
                     name: 'Device'
-                    description: Mount a device using it's /dev/ path
+                    description: Mount a device using it's /dev/ path (Not recommended)
+                    device_fields:
+                        label:
+                            name: Label name
+                            description: Description
         local_mount_path:
             name: 'Local mount path'
-            description: The directory on your root file system (aka mount point) from which it will be possible to access the content of the device
+            description: The directory on your root file system (mount point) to access the content of the device
         file_system_type:
             name: 'File system type'
-            description: Type of file system
+            description: Type of the device's file system
         options:
             name: 'Options'
-            description: Mount options of access to the device
+            description: Mount options of the device and file system type
         dump:
             name: 'Enable dump backup'
-            description: Enable or disable backing up of the device (the command dump)
+            description: Enable or disable backing up of the device (using the command 'dump')
         pass_number:
-            name: 'fsck check order'
+            name: 'Fsck order'
             description: Controls the order in which fsck checks the device/partition for errors at boot time
     device_fields:
-
         mount_name: Name of the mount
         remote_username: Remote username
         remote_computer: Remote computer IP/domain

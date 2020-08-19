@@ -11,7 +11,9 @@ from pyfiglet import figlet_format
 from pprint import pprint
 
 from fstab import FstabFile
+from fstab.fstab_entry import FstabEntry, LabelFstabEntry, UuidFstabEntry, SambaFstabEntry, NfsFstabEntry, SshFsFstabEntry, PhysicalDeviceFstabEntry
 from i18n import language_selector
+from utils.stacktrace_helper import full_stack
 
 fstab = FstabFile('../test/test_fstab_file/happy_full')
 i18n_text = language_selector.get_lang('english')
@@ -19,6 +21,10 @@ i18n_text = language_selector.get_lang('english')
 answer_name = 'choice'
 choice_back = i18n_text['general']['back']
 choice_exit = i18n_text['general']['exit']
+choice_delete = '[{}]'.format(i18n_text['general']['delete'])
+
+prefix_edit = '[{}] '.format(i18n_text['general']['edit'])
+indentation_prefix_edit = ' ' * (4 + len(prefix_edit))
 
 MOVE_BACK_ONE_LEVEL = uuid.uuid4()
 
@@ -46,23 +52,6 @@ def loop(lambda_to_loop):
             list_to_loop.pop()
         elif callable(value):
             list_to_loop.append(value)
-
-def full_stack():
-    '''
-    Shameless copypasta : https://stackoverflow.com/a/16589622
-    Get a complete exception stack trace.
-    '''
-    import traceback
-    exc = sys.exc_info()[0]
-    stack = traceback.extract_stack()[:-1]  # last one would be full_stack()
-    if exc is not None:  # i.e. an exception is present
-        del stack[-1]       # remove call of full_stack, the printed exception
-                            # will contain the caught exception caller instead
-    trc = 'Traceback (most recent call last):\n'
-    stackstr = trc + ''.join(traceback.format_list(stack))
-    if exc is not None:
-         stackstr += '  ' + traceback.format_exc()[len(trc):]
-    return stackstr
 
 def confirm_choice(confirm_text, yes_text, no_text):
     choice_yes = 'y'
@@ -143,26 +132,25 @@ def display_all_mount():
     if not answer or answer[answer_name] == choice_back:
         return MOVE_BACK_ONE_LEVEL
     else:
-        return lambda: display_single_mount_base_field(answer[answer_name])
+        return lambda: display_mount_base_field(answer[answer_name])
 
-def display_single_mount_base_field(mount_name):
-    base_fields_text = i18n_text['single_mount']['base_fields']
-    message = i18n_text['single_mount']['message']
-    edit = i18n_text['general']['edit']
-    choice_delete = i18n_text['general']['delete']
+def display_mount_base_field(mount_name):
+    text_base_fields = i18n_text['mount']['base_fields']
+    message = i18n_text['mount']['message']
     
     edit_choices = []
-    data = fstab.entries[mount_name]
-    for attribute in data.base_fields:
-        name = base_fields_text[attribute]['name']
-        data_value = data.base_fields[attribute]
-        description = base_fields_text[attribute]['description']
+    entry = fstab.entries[mount_name]
+    for attribute in entry.base_fields:
+        name = text_base_fields[attribute]['name']
+        data_value = entry.base_fields[attribute]
+        description = text_base_fields[attribute]['description']
         edit_choices.append({
-            'name': '[{edit}] {name} : {data_value} ({description})'.format(
-                edit=edit,
+            'name': '{edit} {name:18.18}  ({description})\n{spaces}Value: {data_value}\n'.format(
+                edit=prefix_edit,
                 name=name,
                 data_value=data_value,
-                description=description),
+                description=description,
+                spaces=indentation_prefix_edit),
             'value': attribute
         })
     choices = edit_choices + [Separator(), choice_delete, Separator(), choice_back]
@@ -178,14 +166,68 @@ def display_single_mount_base_field(mount_name):
     if not answer or answer[answer_name] == choice_back:
         return MOVE_BACK_ONE_LEVEL
     elif answer[answer_name] == choice_delete:
-        confirm_question = i18n_text['single_mount']['delete_confirm']['question'].format(mount_name)
-        yes = i18n_text['single_mount']['delete_confirm']['yes']
-        no = i18n_text['single_mount']['delete_confirm']['no']
+        confirm_question = i18n_text['mount']['delete_confirm']['question'].format(mount_name)
+        yes = i18n_text['mount']['delete_confirm']['yes']
+        no = i18n_text['mount']['delete_confirm']['no']
         is_delete_confirmed = confirm_choice(confirm_question, yes, no)
         if is_delete_confirmed:
             fstab.remove(mount_name)
             fstab.commit()
             return MOVE_BACK_ONE_LEVEL
+    elif answer[answer_name] in entry.base_fields:
+        attribute = answer[answer_name]
+        if attribute == 'device':
+            return lambda: display_device(entry)
+        elif attribute == 'local_mount_path':
+            pass
+        elif attribute == 'file_system_type':
+            pass
+        elif attribute == 'options':
+            pass
+        elif attribute == 'dump':
+            pass
+        elif attribute == 'pass_number':
+            pass
+        return lambda: display_attribute_fields(answer[answer_name])
+
+def display_device(entry: FstabEntry):
+    device_type = entry.get_device_type()
+    device_type_text = i18n_text['mount']['base_fields']['device']['types'][device_type]
+    device_fields_text = device_type_text['device_fields']
+    message = '{name:7}: {description}'.format(
+        name=device_type_text['name'],
+        description=device_type_text['description'])
+    edit_choices = []
+    for attribute in entry.device_fields:
+        name = device_fields_text[attribute]['name']
+        data_value = entry.device_fields[attribute]
+        description = device_fields_text[attribute]['description']
+        edit_choices.append({
+            'name': '{edit} {name:18.18}  ({description})\n{spaces}Value: {data_value}\n'.format(
+                edit=prefix_edit,
+                name=name,
+                data_value=data_value,
+                description=description,
+                spaces=indentation_prefix_edit),
+            'value': attribute
+        })
+    choices = edit_choices + [Separator(), choice_back]
+    questions = [
+        {
+            'type': 'list',
+            'name': answer_name,
+            'message': message,
+            'choices': choices
+        }
+    ]
+    answer = prompt(questions)
+    if not answer or answer[answer_name] == choice_back:
+        return MOVE_BACK_ONE_LEVEL
+    elif answer[answer_name] in entry.device_fields:
+        display_edit_text_attribute()
+
+def display_edit_text_attribute():
+    pass
 
 if __name__ == '__main__':
     main()

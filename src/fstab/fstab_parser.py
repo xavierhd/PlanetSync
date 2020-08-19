@@ -7,14 +7,13 @@ from copy import copy
 
 from utils.file_reader import read, readLine, dump
 from fstab.fstab_entry import build_fstab_entry
+from utils.stacktrace_helper import full_stack
 
 
 class FstabParser:
     """
     Low level interface with the fstab file, the fstab backend
     """
-
-    current_line_section = False
 
     def __init__(self, path):
         self.path = path
@@ -66,13 +65,17 @@ class FstabParser:
         :param line: (str) The line itself to add from the fstab file.
         """
         if len(line) > 0:
-            if line[0] == '#':
+            key = self.get_key(line)
+            if key:
                 self.saved_key = self.get_key(line)
             else:
                 if not self.saved_key:
                     self.saved_key = "No name - " + uuid.uuid4().hex
                 # We link the key to the line
-                self.entries[self.saved_key] = build_fstab_entry(line)
+                try:
+                    self.entries[self.saved_key] = build_fstab_entry(line)
+                except:
+                    print('Error while building the entry for line: {line}\n{error}'.format(line=line, error=full_stack()))
                 self.saved_key = None
 
     def commit(self):
@@ -86,14 +89,12 @@ class FstabParser:
         """
         Build the fstab autogen section
         """
-        lineFeed = '\n'
-        autogenString = self.head_template + lineFeed
-
-        for key in autogenDict:
-            autogenString += self.entry_template.format(shareName=key, **autogenDict[key])
-
-        autogenString += self.tail_template
-        return autogenString
+        content = self.head_template
+        for entry_name in self.entries:
+            entry_line = self.entries[entry_name].to_line()
+            content += self.entry_template.format(entry_name=entry_name, entry=entry_line)
+        content += self.tail_template
+        return content
 
     def rebuild_fstab(self):
         """
@@ -103,9 +104,7 @@ class FstabParser:
         fstab = ""
         for line in self.head:
             fstab += line
-
         fstab += self.make_autogen_section()
-
         for line in self.tail:
             fstab += line
         return fstab
@@ -115,10 +114,8 @@ class FstabParser:
         Check if the line is inside the autogen section and return the action to do with the line
         """
         action = self.next_action
-        if line.startswith('\n'):
-            action = LineAction.DROP
         # If the current line equal to the head -> we enter the autogen
-        elif line == self.head_template:
+        if line == self.head_template:
             self.next_action = LineAction.ADD_TO_AUTOGEN
             action = LineAction.DROP
         # If the current line equal to the tail -> we exit the autogen
