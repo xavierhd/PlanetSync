@@ -11,7 +11,7 @@ menu:
         - Unmount a folder from fstab
         - See my mount
 single_mount:
-    message: Select the action you want to perform
+    message: Select the action you want to perform on '{0}'
     delete_confirm:
         question: Are you sure that you want to remove the mount '{0}'? This action cannot be cancelled!
         'yes': Yes, delete it.

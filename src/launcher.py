@@ -147,9 +147,9 @@ def display_all_mount():
 
 def display_single_mount(mount_name):
     prefixes = i18n_text['single_mount']['attributes']
-    message = i18n_text['single_mount']['message']
+    message = i18n_text['single_mount']['message'].format(mount_name)
     edit = i18n_text['general']['edit']
-    choice_delete = i18n_text['general']['delete']
+    choice_delete = i18n_text['general']['delete'] + ' ' + mount_name
     
     edit_choices = []
     data = fstab.data[mount_name]
