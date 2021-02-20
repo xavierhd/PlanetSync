@@ -6,14 +6,14 @@ Create an ssh file share with your home's dynamic IP server
 """
 import sys
 import uuid
-from PyInquirer import prompt, Separator
+from questionary import prompt, Separator
 from pyfiglet import figlet_format
 from pprint import pprint
 
 from fstab import FstabFile
 from i18n import language_selector
 
-fstab = FstabFile('../test/test_fstab_file/happy_full')
+fstab_file = FstabFile('../test/test_fstab_file/happy_full')
 i18n_text = language_selector.get_lang('english')
 
 answer_name = 'choice'
@@ -129,7 +129,7 @@ def display_umount_fstab():
 
 def display_all_mount():
     message = i18n_text['all_mount']['message']
-    fstab_server = fstab.get_server_list()
+    fstab_server = fstab_file.get_server_list()
     choices = fstab_server + [Separator(), choice_back]
     questions = [
         {
@@ -143,7 +143,8 @@ def display_all_mount():
     if not answer or answer[answer_name] == choice_back:
         return MOVE_BACK_ONE_LEVEL
     else:
-        return lambda: display_single_mount(answer[answer_name])
+        mount_name = answer[answer_name]
+        return lambda: display_single_mount(mount_name)
 
 def display_single_mount(mount_name):
     prefixes = i18n_text['single_mount']['attributes']
@@ -152,7 +153,7 @@ def display_single_mount(mount_name):
     choice_delete = i18n_text['general']['delete'] + ' ' + mount_name
     
     edit_choices = []
-    data = fstab.data[mount_name]
+    data = fstab_file.data[mount_name]
     for attribute in data:
         prefix = prefixes[attribute]
         data_value = data[attribute]
@@ -178,7 +179,7 @@ def display_single_mount(mount_name):
         no = i18n_text['single_mount']['delete_confirm']['no']
         is_delete_confirmed = confirm_choice(confirm_question, yes, no)
         if is_delete_confirmed:
-            fstab.remove(mount_name)
+            fstab_file.remove(mount_name)
             return MOVE_BACK_ONE_LEVEL
 
 if __name__ == '__main__':
