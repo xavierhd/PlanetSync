@@ -1,11 +1,11 @@
 
-from yaml import load, dump as ydump, YAMLError
+from yaml import load, dump as ydump, YAMLError, FullLoader
 
 
 def readYaml(filePath):
     content = None
     try:
-        content = load(read(filePath))
+        content = load(read(filePath), Loader=FullLoader)
     except YAMLError as e:
         print ("An error occured while parsing the yaml file: {0}\n{1}".format(filePath, e))
     return content
