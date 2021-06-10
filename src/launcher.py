@@ -11,14 +11,31 @@ from pyfiglet import figlet_format
 from pprint import pprint
 
 from fstab import FstabFile
+from fstab.fstab_entry import FstabEntry, LabelFstabEntry, UuidFstabEntry, SambaFstabEntry, NfsFstabEntry, SshFsFstabEntry, PhysicalDeviceFstabEntry
 from i18n import language_selector
+from utils.stacktrace_helper import full_stack
 
-fstab_file = FstabFile('../test/test_fstab_file/happy_full')
-i18n_text = language_selector.get_lang('english')
+default_language = 'english'
+fstab_file_path = '../test/test_fstab_file/happy_full'
+fstab_file = None
+try:
+    fstab_file = FstabFile(fstab_file_path)
+except:
+    print("The fstab file {fstab_file_path} cannot be initialized.")
+
+i18n = None
+try:
+    i18n = language_selector.get_lang(default_language)
+except:
+    print("The language resource [{default_language}] cannot be initialized.")
 
 answer_name = 'choice'
-choice_back = i18n_text['general']['back']
-choice_exit = i18n_text['general']['exit']
+choice_back = i18n['general']['back']
+choice_exit = i18n['general']['exit']
+choice_delete = '[{}]'.format(i18n['general']['delete'])
+
+prefix_edit = '[{}] '.format(i18n['general']['edit'])
+indentation_prefix_edit = ' ' * (4 + len(prefix_edit))
 
 MOVE_BACK_ONE_LEVEL = uuid.uuid4()
 
@@ -47,23 +64,6 @@ def loop(lambda_to_loop):
         elif callable(value):
             list_to_loop.append(value)
 
-def full_stack():
-    '''
-    Shameless copypasta : https://stackoverflow.com/a/16589622
-    Get a complete exception stack trace.
-    '''
-    import traceback
-    exc = sys.exc_info()[0]
-    stack = traceback.extract_stack()[:-1]  # last one would be full_stack()
-    if exc is not None:  # i.e. an exception is present
-        del stack[-1]       # remove call of full_stack, the printed exception
-                            # will contain the caught exception caller instead
-    trc = 'Traceback (most recent call last):\n'
-    stackstr = trc + ''.join(traceback.format_list(stack))
-    if exc is not None:
-         stackstr += '  ' + traceback.format_exc()[len(trc):]
-    return stackstr
-
 def confirm_choice(confirm_text, yes_text, no_text):
     choice_yes = 'y'
     choice_no = 'n'
@@ -89,10 +89,10 @@ def confirm_choice(confirm_text, yes_text, no_text):
     return (answer and answer[answer_name] == choice_yes)
 
 def display_main_menu():
-    print(figlet_format(i18n_text['menu']['title'], font="slant"))
-    print(i18n_text['menu']['info'])
-    message = i18n_text['menu']['message']
-    choices = i18n_text['menu']['choices'] + [Separator(), choice_exit]
+    print(figlet_format(i18n['menu']['title'], font="slant"))
+    print(i18n['menu']['info'])
+    message = i18n['menu']['message']
+    choices = i18n['menu']['choices'] + [Separator(), choice_exit]
     questions = [
         {
             'type': 'list',
@@ -128,7 +128,7 @@ def display_umount_fstab():
     return MOVE_BACK_ONE_LEVEL
 
 def display_all_mount():
-    message = i18n_text['all_mount']['message']
+    message = i18n['all_mount']['message']
     fstab_server = fstab_file.get_server_list()
     choices = fstab_server + [Separator(), choice_back]
     questions = [
@@ -147,18 +147,23 @@ def display_all_mount():
         return lambda: display_single_mount(mount_name)
 
 def display_single_mount(mount_name):
-    prefixes = i18n_text['single_mount']['attributes']
-    message = i18n_text['single_mount']['message'].format(mount_name)
-    edit = i18n_text['general']['edit']
-    choice_delete = i18n_text['general']['delete'] + ' ' + mount_name
+    message = i18n['single_mount']['message'].format(mount_name)
+    text_base_fields = i18n['single_mount']['base_fields']
+    choice_delete = i18n['general']['delete'] + ' ' + mount_name
     
     edit_choices = []
-    data = fstab_file.data[mount_name]
-    for attribute in data:
-        prefix = prefixes[attribute]
-        data_value = data[attribute]
+    entry = fstab_file.entries[mount_name]
+    for attribute in entry.base_fields:
+        name = text_base_fields[attribute]['name']
+        data_value = entry.base_fields[attribute]
+        description = text_base_fields[attribute]['description']
         edit_choices.append({
-            'name': '[' + edit + ']' + prefix + ': ' + data_value,
+            'name': '{edit} {name:18.18}  ({description})\n{spaces}Value: {data_value}\n'.format(
+                edit=prefix_edit,
+                name=name,
+                data_value=data_value,
+                description=description,
+                spaces=indentation_prefix_edit),
             'value': attribute
         })
     choices = edit_choices + [Separator(), choice_delete, Separator(), choice_back]
@@ -174,13 +179,83 @@ def display_single_mount(mount_name):
     if not answer or answer[answer_name] == choice_back:
         return MOVE_BACK_ONE_LEVEL
     elif answer[answer_name] == choice_delete:
-        confirm_question = i18n_text['single_mount']['delete_confirm']['question'].format(mount_name)
-        yes = i18n_text['single_mount']['delete_confirm']['yes']
-        no = i18n_text['single_mount']['delete_confirm']['no']
+        confirm_question = i18n['single_mount']['delete_confirm']['question'].format(mount_name)
+        yes = i18n['single_mount']['delete_confirm']['yes']
+        no = i18n['single_mount']['delete_confirm']['no']
         is_delete_confirmed = confirm_choice(confirm_question, yes, no)
         if is_delete_confirmed:
             fstab_file.remove(mount_name)
+            fstab_file.commit()
             return MOVE_BACK_ONE_LEVEL
+    elif answer[answer_name] in entry.base_fields:
+        attribute = answer[answer_name]
+        if attribute == 'device':
+            return lambda: display_device(entry)
+        elif attribute == 'local_mount_path':
+            return lambda:
+        elif attribute == 'file_system_type':
+            pass
+        elif attribute == 'options':
+            pass
+        elif attribute == 'dump':
+            pass
+        elif attribute == 'pass_number':
+            pass
+        print('Not yet implemented.')
+
+def display_device(entry: FstabEntry):
+    device_type = entry.get_device_type()
+    device_type_text = i18n['single_mount']['base_fields']['device']['types'][device_type]
+    device_fields_text = device_type_text['device_fields']
+    message = '{name:7}: {description}'.format(
+        name=device_type_text['name'],
+        description=device_type_text['description'])
+    edit_choices = []
+    for attribute in entry.device_fields:
+        name = device_fields_text[attribute]['name']
+        data_value = entry.device_fields[attribute]
+        description = device_fields_text[attribute]['description']
+        edit_choices.append({
+            'name': '{edit} {name:18.18}  ({description})\n{spaces}Value: {data_value}\n'.format(
+                edit=prefix_edit,
+                name=name,
+                data_value=data_value,
+                description=description,
+                spaces=indentation_prefix_edit),
+            'value': attribute
+        })
+    choices = edit_choices + [Separator(), choice_back]
+    questions = [
+        {
+            'type': 'list',
+            'name': answer_name,
+            'message': message,
+            'choices': choices
+        }
+    ]
+    answer = prompt(questions)
+    if not answer or answer[answer_name] == choice_back:
+        return MOVE_BACK_ONE_LEVEL
+    elif answer[answer_name] in entry.device_fields:
+        return display_edit_fstab_attribute(entry.device_fields, answer[answer_name])
+
+def display_edit_fstab_attribute(dict_to_edit, key):
+    message = i18n['edit']['question'].format(dict_to_edit[key]) + '\n   -> '
+    questions = [
+        {
+            'type': 'text',
+            'name': answer_name,
+            'message': message
+        }
+    ]
+    answer = prompt(questions)
+    if not answer or answer[answer_name] == choice_back:
+        return MOVE_BACK_ONE_LEVEL
+    elif not answer[answer_name]:
+        print(i18n['edit']['cancel'])
+    else:
+        dict_to_edit[key] = answer[answer_name]
+        fstab_file.commit()
 
 if __name__ == '__main__':
     main()
